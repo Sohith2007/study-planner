@@ -1,7 +1,7 @@
 {
   "slug": "study-planner-pomodoro",
   "problem_statement": "Create an application of study planner for students with pomodoro timer",
-  "stage": "qa",
+  "stage": "docs",
   "phases": {
     "P0": {
       "status": "done",
@@ -37,7 +37,9 @@
     "agent_id": "abe82fd35558eca11"
   },
   "qa_round": 1,
-  "bug_history": [],
+  "bug_history": [
+    "Round 1: PASS, 47/47 AC, 53/53 e2e; 1 minor open (BUG-001 keyboard Tab skips skip-link/wordmark/current nav link, P0)"
+  ],
   "updated": "2026-09-19",
   "architect": {
     "status": "done",
@@ -60,6 +62,10 @@
   },
   "pending_cross_phase": [],
   "qa": {
+    "status": "done",
+    "agent_id": "a496f7034ab4d1d5d"
+  },
+  "docs": {
     "status": "running",
     "agent_id": ""
   }
