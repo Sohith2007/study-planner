@@ -84,6 +84,50 @@ test('AC-P0-4: deep link to /week renders the app', async ({ page }) => {
 test('replan-button is present in the shell', async ({ page }) => {
   await page.goto('/today')
   await expect(page.getByTestId('replan-button')).toBeVisible()
+  await expect(page.getByTestId('plan-status')).toBeVisible()
+})
+
+test('shell: status bar hidden on /focus, unknown route redirects, nav-home links to /today', async ({ page }) => {
+  await page.goto('/focus')
+  await expect(page.getByTestId('nav-focus')).toHaveAttribute('aria-current', 'page')
+  await expect(page.getByTestId('plan-status')).toHaveCount(0)
+  await expect(page.getByTestId('replan-button')).toHaveCount(0)
+  // Timer is idle (P0 stub), so the pill is not shown.
+  await expect(page.getByTestId('nav-timer')).toHaveCount(0)
+  await page.getByTestId('nav-home').click()
+  await expect(page).toHaveURL(/\/today$/)
+  await page.goto('/no-such-page')
+  await expect(page).toHaveURL(/\/today$/)
+})
+
+test('shell at 375px: every nav test id exists exactly once and is reachable', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 })
+  await page.goto('/today')
+  for (const [key] of NAV) {
+    await expect(page.getByTestId(`nav-${key}`)).toHaveCount(1)
+  }
+  await expect(page.getByTestId('nav-home')).toHaveCount(1)
+  await page.getByTestId('nav-data').click()
+  await expect(page).toHaveURL(/\/data$/)
+  await expect(page.getByTestId('nav-data')).toBeInViewport()
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)
+  expect(overflow).toBe(false)
+})
+
+test('design tokens: self-hosted fonts only, dark mode follows the system', async ({ page }) => {
+  const foreign: string[] = []
+  page.on('request', (r) => {
+    if (!r.url().startsWith('http://localhost:5173')) foreign.push(r.url())
+  })
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await page.goto('/today')
+  await expect(page.locator('html')).toHaveClass(/dark/)
+  const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
+  expect(bg).toBe('rgb(22, 21, 18)') // --fp-bg dark #161512
+  await page.emulateMedia({ colorScheme: 'light' })
+  await expect(page.locator('html')).not.toHaveClass(/dark/)
+  await page.evaluate(() => document.fonts.ready)
+  expect(foreign).toEqual([])
 })
 
 test('catch-up on open leaves no planned block before today and plans work', async ({ page }) => {

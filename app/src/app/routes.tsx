@@ -1,4 +1,4 @@
-import { Link, Navigate, Route, Routes } from 'react-router'
+import { Navigate, Route, Routes } from 'react-router'
 import TodayPage from '@/features/planner/TodayPage'
 import WeekPage from '@/features/planner/WeekPage'
 import FocusPage from '@/features/focus/FocusPage'
@@ -10,20 +10,9 @@ import { Layout } from './Layout'
 
 export { NAV_ITEMS } from './nav'
 
-function NotFound() {
-  return (
-    <div className="flex flex-col gap-2">
-      <h1 className="text-2xl font-semibold">Page not found</h1>
-      <Link className="text-brand underline" to="/today">
-        Go to Today
-      </Link>
-    </div>
-  )
-}
-
 /**
  * Routes (master-plan 4.3): / -> /today, /today, /week?start=YYYY-MM-DD, /focus?blockId=<id>,
- * /setup, /settings, /dashboard, /data. Query params are read by the pages via useSearchParams.
+ * /setup, /settings, /dashboard, /data. Unknown routes redirect to /today. Query params are read by the pages via useSearchParams.
  */
 export function AppRoutes() {
   return (
@@ -37,7 +26,7 @@ export function AppRoutes() {
         <Route path="settings" element={<SettingsPage />} />
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="data" element={<DataPage />} />
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<Navigate to="/today" replace />} />
       </Route>
     </Routes>
   )

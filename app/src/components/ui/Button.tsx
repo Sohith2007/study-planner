@@ -1,38 +1,33 @@
-import clsx from 'clsx'
 import type { ButtonHTMLAttributes } from 'react'
-
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
-export type ButtonSize = 'sm' | 'md' | 'lg'
+import { buttonClasses, type ButtonSize, type ButtonVariant } from './buttonStyles'
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** primary | accent (timer start on /focus only) | secondary | ghost | danger | danger-ghost. Default primary. */
   variant?: ButtonVariant
+  /** sm h-9 · md h-11 (default, 44px) · lg h-14 · icon size-11 (pass aria-label). */
   size?: ButtonSize
+  /**
+   * Loading state: disables the button and sets aria-busy. Pass the loading label as children yourself
+   * (e.g. `{saving ? 'Saving…' : 'Save'}`); copy is specified per screen.
+   */
+  loading?: boolean
 }
 
-const variants: Record<ButtonVariant, string> = {
-  primary: 'bg-brand text-on-brand hover:bg-brand-strong',
-  secondary: 'bg-surface text-ink border border-line hover:bg-surface-2',
-  ghost: 'bg-transparent text-ink hover:bg-surface-2',
-  danger: 'bg-danger text-white hover:opacity-90',
-}
-
-const sizes: Record<ButtonSize, string> = {
-  sm: 'h-8 px-3 text-sm',
-  md: 'h-10 px-4 text-sm',
-  lg: 'h-12 px-6 text-base',
-}
-
-export function Button({ variant = 'primary', size = 'md', className, type = 'button', ...rest }: ButtonProps) {
+export function Button({
+  variant = 'primary',
+  size = 'md',
+  loading = false,
+  className,
+  type = 'button',
+  disabled,
+  ...rest
+}: ButtonProps) {
   return (
     <button
       type={type}
-      className={clsx(
-        'inline-flex items-center justify-center gap-2 rounded-control font-medium transition-colors',
-        'disabled:cursor-not-allowed disabled:opacity-50',
-        variants[variant],
-        sizes[size],
-        className,
-      )}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
+      className={buttonClasses(variant, size, className)}
       {...rest}
     />
   )

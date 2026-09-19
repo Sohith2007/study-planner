@@ -3,7 +3,10 @@ import { createContext, useContext } from 'react'
 export type ToastTone = 'success' | 'error' | 'info'
 
 export interface ToastApi {
-  /** Show a toast (data-testid "toast", role "status") for `durationMs` (default 3000). */
+  /**
+   * Show a toast (data-testid "toast", data-tone=<tone>). Auto-dismisses after 4 s (errors: 8 s,
+   * role="alert", with a close button). At most 3 are visible; the oldest drops first.
+   */
   show(message: string, tone?: ToastTone, durationMs?: number): void
 }
 

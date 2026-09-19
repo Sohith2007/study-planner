@@ -19,9 +19,9 @@ export function countdownLabel(date: ISODate, today: ISODate = todayISO()): stri
   return n > 0 ? `in ${n} days` : `${-n} days ago`
 }
 
-/** e.g. "Saturday, 19 September". */
+/** e.g. "Saturday, 19 September 2026" (Today heading). */
 export function formatLongDate(date: ISODate): string {
-  return format(parseISODate(date), 'EEEE, d MMMM')
+  return format(parseISODate(date), 'EEEE, d MMMM yyyy')
 }
 
 /** e.g. "Sat 19 Sep". */
@@ -55,14 +55,14 @@ export const PHASE_LABEL: Record<SessionKind, string> = {
   longBreak: 'Long break',
 }
 
-/** Eight preset subject colours (Setup colour picker). */
+/** Eight preset subject colours (design tokens.json subjectPresets; Setup colour picker). */
 export const SUBJECT_COLOR_PRESETS = [
-  '#6366f1',
-  '#f59e0b',
-  '#10b981',
-  '#ef4444',
-  '#3b82f6',
-  '#ec4899',
-  '#8b5cf6',
-  '#14b8a6',
+  { key: 'indigo', name: 'Indigo', value: '#6366F1' },
+  { key: 'amber', name: 'Amber', value: '#F59E0B' },
+  { key: 'emerald', name: 'Emerald', value: '#10B981' },
+  { key: 'rose', name: 'Rose', value: '#F43F5E' },
+  { key: 'sky', name: 'Sky', value: '#0EA5E9' },
+  { key: 'violet', name: 'Violet', value: '#8B5CF6' },
+  { key: 'orange', name: 'Orange', value: '#F97316' },
+  { key: 'slate', name: 'Slate', value: '#64748B' },
 ] as const

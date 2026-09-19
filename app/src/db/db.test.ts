@@ -64,6 +64,33 @@ describe('demo seed', () => {
   })
 })
 
+describe('clearAll survives a reload', () => {
+  it('leaves a seed marker so a reload (close + reopen + bootstrap) does not re-seed; resetToDemo still re-seeds', async () => {
+    expect(await seedIfEmpty()).toBe(true)
+    await clearAll()
+    const marker = await db.meta.get('seed')
+    expect(marker).toMatchObject({ key: 'seed', version: 1 })
+
+    // Simulate a page reload: close the connection, reopen it, and run the boot-time seeding again.
+    db.close()
+    await db.open()
+    expect(await seedIfEmpty()).toBe(false)
+    for (const table of [db.subjects, db.exams, db.topics, db.blocks, db.sessions]) {
+      expect(await table.count()).toBe(0)
+    }
+    expect(await db.settings.count()).toBe(1)
+
+    await resetToDemo()
+    db.close()
+    await db.open()
+    expect(await seedIfEmpty()).toBe(false)
+    expect(await db.subjects.count()).toBe(3)
+    expect(await db.exams.count()).toBe(3)
+    expect(await db.topics.count()).toBe(12)
+    expect(await db.sessions.count()).toBe(20)
+  })
+})
+
 describe('repo helpers', () => {
   it('get/save settings merges a patch', async () => {
     expect((await getSettings()).focusMinutes).toBe(25)

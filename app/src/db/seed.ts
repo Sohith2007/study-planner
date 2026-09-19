@@ -58,9 +58,9 @@ export function buildDemoSeed(today: ISODate = todayISO(), now: Date = new Date(
   const settings = defaultSettings() // Mon-Fri 6, Sat 8, Sun 4; 25/5/15; every 4; classic; goal 4; no blackouts
 
   const subjects: Subject[] = [
-    { id: S.math, name: 'Mathematics', color: '#6366f1', createdAt },
-    { id: S.physics, name: 'Physics', color: '#f59e0b', createdAt },
-    { id: S.chemistry, name: 'Chemistry', color: '#10b981', createdAt },
+    { id: S.math, name: 'Mathematics', color: '#6366F1', createdAt },
+    { id: S.physics, name: 'Physics', color: '#F59E0B', createdAt },
+    { id: S.chemistry, name: 'Chemistry', color: '#10B981', createdAt },
   ]
 
   const exams: Exam[] = [

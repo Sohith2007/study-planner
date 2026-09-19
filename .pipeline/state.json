@@ -8,23 +8,23 @@
       "agent_id": "ad45dc23b0a909e9d"
     },
     "P1": {
-      "status": "pending",
+      "status": "running",
       "agent_id": ""
     },
     "P2": {
-      "status": "pending",
+      "status": "running",
       "agent_id": ""
     },
     "P3": {
-      "status": "pending",
+      "status": "running",
       "agent_id": ""
     },
     "P4": {
-      "status": "pending",
+      "status": "running",
       "agent_id": ""
     },
     "P5": {
-      "status": "pending",
+      "status": "running",
       "agent_id": ""
     }
   },

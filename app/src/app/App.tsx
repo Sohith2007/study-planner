@@ -11,7 +11,7 @@ export function App({ boot }: { boot: BootstrapResult }) {
       <BrowserRouter>
         <ToastProvider>
           {boot.error ? (
-            <div role="alert" className="bg-danger-soft px-4 py-2 text-center text-sm text-danger" data-testid="storage-error">
+            <div role="alert" className="bg-danger-soft px-4 py-2 text-center text-small text-danger" data-testid="storage-error">
               Local storage is unavailable, so your data cannot be saved in this browser. ({boot.error})
             </div>
           ) : null}
