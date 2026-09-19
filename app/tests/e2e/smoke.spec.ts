@@ -130,6 +130,32 @@ test('design tokens: self-hosted fonts only, dark mode follows the system', asyn
   expect(foreign).toEqual([])
 })
 
+test('fonts: IBM Plex Mono faces resolve from /fonts with 200', async ({ page }) => {
+  const fontResponses: Record<string, number> = {}
+  page.on('response', (r) => {
+    if (r.url().includes('/fonts/')) fontResponses[r.url().split('/fonts/')[1]] = r.status()
+  })
+  await page.goto('/today')
+  const loaded = await page.evaluate(async () =>
+    Promise.all(['300', '400', '500'].map(async (w) => (await document.fonts.load(`${w} 16px "IBM Plex Mono"`)).length)),
+  )
+  expect(loaded).toEqual([1, 1, 1])
+  expect(fontResponses['IBMPlexMono-Regular.woff2']).toBe(200)
+  expect(fontResponses['IBMPlexMono-Light.woff2']).toBe(200)
+  expect(fontResponses['IBMPlexMono-Medium.woff2']).toBe(200)
+  expect(fontResponses['InstrumentSans-Variable.woff2']).toBe(200)
+})
+
+test('route change focuses the lazily loaded page h1', async ({ page }) => {
+  await page.goto('/today')
+  await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
+  for (const key of ['dashboard', 'setup', 'week']) {
+    await page.getByTestId(`nav-${key}`).click()
+    await expect(page).toHaveURL(new RegExp(`/${key}`))
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('H1')
+  }
+})
+
 test('catch-up on open leaves no planned block before today and plans work', async ({ page }) => {
   await page.goto('/today')
   await expect(page.getByTestId('nav-today')).toBeVisible()

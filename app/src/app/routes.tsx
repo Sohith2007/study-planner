@@ -1,12 +1,15 @@
 import { Navigate, Route, Routes } from 'react-router'
-import TodayPage from '@/features/planner/TodayPage'
-import WeekPage from '@/features/planner/WeekPage'
-import FocusPage from '@/features/focus/FocusPage'
-import SetupPage from '@/features/setup/SetupPage'
-import SettingsPage from '@/features/settings/SettingsPage'
-import DashboardPage from '@/features/dashboard/DashboardPage'
-import DataPage from '@/features/data/DataPage'
+import { lazy } from 'react'
 import { Layout } from './Layout'
+
+// Pages are code-split (one chunk each); Layout wraps <Outlet/> in <Suspense> with a LoadingBlock fallback.
+const TodayPage = lazy(() => import('@/features/planner/TodayPage'))
+const WeekPage = lazy(() => import('@/features/planner/WeekPage'))
+const FocusPage = lazy(() => import('@/features/focus/FocusPage'))
+const SetupPage = lazy(() => import('@/features/setup/SetupPage'))
+const SettingsPage = lazy(() => import('@/features/settings/SettingsPage'))
+const DashboardPage = lazy(() => import('@/features/dashboard/DashboardPage'))
+const DataPage = lazy(() => import('@/features/data/DataPage'))
 
 export { NAV_ITEMS } from './nav'
 

@@ -19,5 +19,5 @@ export {
 export { EmptyState, type EmptyStateProps, type EmptyIllustration } from './EmptyState'
 export { Skeleton, LoadingBlock, PageError, ProgressBar, type ProgressBarProps } from './Feedback'
 export { ToastProvider } from './Toast'
-export { useToast, type ToastApi, type ToastTone } from './toastContext'
+export { useToast, type ToastApi, type ToastTone, type ToastAction, type ToastOptions } from './toastContext'
 export { Icon } from './icons'

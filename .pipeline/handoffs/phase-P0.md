@@ -1,6 +1,6 @@
 # Handoff: P0 Foundation
 
-> Owner: phase-engineer · Status: done · Round: fix-round-1 (design package applied)
+> Owner: phase-engineer · Status: done · Round: fix-round-2 (wave-2 cross-phase requests)
 
 ## Features delivered
 | Feature | Status | Notes |
@@ -11,7 +11,7 @@
 | Shared UI primitives | ✅ done | Styled to the design system: Button, Card + CardHeader, Badge + SubjectChip + PomodoroPips, Modal + ConfirmDialog, Field + Input/Select/Textarea/Switch/SegmentedControl, EmptyState, Skeleton/LoadingBlock/PageError/ProgressBar, Toast, Icon |
 | Design package (fix-round-1) | ✅ done | Tokens from tokens.json including dark mode, self-hosted fonts, app-shell.md shell (nav-home, nav-timer, skip link, error boundary, status bar hidden on /focus) |
 | Contract stubs (scheduler, planService, PlanSync, PlanStatusBar, timer, 7 pages) | ✅ done | Signatures frozen per master-plan §4.3. Stand-ins actually work (see below) |
-| Playwright + Vitest config, smoke e2e | ✅ done | 8 smoke tests, 15 unit tests |
+| Playwright + Vitest config, smoke e2e | ✅ done | 10 smoke tests. The whole suite has 165 unit tests across all phases (15 of them P0's) |
 
 ## Acceptance criteria self-check
 | AC | Result | How verified |
@@ -20,7 +20,7 @@
 | AC-P0-2 | pass | smoke.spec "AC-P0-2": `/` goes to `/today`, all 7 `nav-*` labels are checked, each click changes the URL and sets `aria-current`, a `window.__spa` marker survives (so no full reload happened), and there are 0 console/page errors |
 | AC-P0-3 | pass | smoke.spec "AC-P0-3" reads IndexedDB `focusplan`: 3 subjects, 3 exams, 12 topics, 1 settings row, and still 3 subjects/12 topics after reload. Unit test `seedIfEmpty seeds once and never duplicates` also covers it |
 | AC-P0-4 | pass | smoke.spec "AC-P0-4": `page.goto('/week')` returns 200 and the app renders, including after a reload |
-| AC-P0-5 | pass | `npx playwright test tests/e2e/smoke.spec.ts` gives 8 passed. `npm run test:unit` gives 15 passed, exit 0 |
+| AC-P0-5 | pass | `npx playwright test tests/e2e/smoke.spec.ts` gives 10 passed. `npm run test:unit` gives 165 passed (whole app), exit 0 |
 
 ## Files created / modified
 All paths are under `app/`:
@@ -33,7 +33,7 @@ All paths are under `app/`:
 - `src/main.tsx`: calls `initTheme()`, awaits `bootstrap()`, then renders `<App/>` in StrictMode
 - `src/index.css`: Tailwind 4, `@font-face`, the `--fp-*` light and dark variables, `@theme inline` tokens and the shared utilities
 - `src/vite-env.d.ts`
-- `src/app/App.tsx` (TimerProvider → BrowserRouter → ToastProvider → routes, plus a storage-error banner), `routes.tsx`, `nav.ts` (NAV_ITEMS), `NavBar.tsx` (plus `NavTimerPill`), `Layout.tsx`, `ErrorBoundary.tsx`, `theme.ts`, `bootstrap.ts`
+- `src/app/App.tsx` (ToastProvider → TimerProvider → BrowserRouter → routes, plus a storage-error banner), `routes.tsx`, `nav.ts` (NAV_ITEMS), `NavBar.tsx` (plus `NavTimerPill`), `Layout.tsx`, `ErrorBoundary.tsx`, `theme.ts`, `bootstrap.ts`
 - `src/types/index.ts`: every entity type
 - `src/db/db.ts`, `settings.ts`, `repo.ts`, `seed.ts`, `index.ts` (barrel), `db.test.ts`
 - `src/lib/dates.ts`, `ids.ts`, `format.ts`, `index.ts` (barrel), `dates.test.ts`
@@ -154,8 +154,8 @@ Service tests in Node: put `import 'fake-indexeddb/auto'` first, then import `@/
   - `Skeleton` {className} and `LoadingBlock` {testId (`<page>-loading`), children}.
   - `PageError` {onReload?}: `page-error` / `error-reload`, with the design copy.
   - `ProgressBar` {value, label, kind?: 'default'|'burn', tone?: 'focus'|'break', testId?}: `role=progressbar`.
-- **`ToastProvider`** is mounted in App. **`useToast().show(message, tone?='success', durationMs?)`**:
-  - The default duration is 4 s. `error` lasts 8 s, uses `role=alert` and has a close button.
+- **`ToastProvider`** is mounted in App (outermost). **`useToast().show(message, tone?='success', options?: number | ToastOptions)`**, where `ToastOptions = { durationMs?, action?: { label, onClick, testId?='toast-undo' } }` (fix-round-2):
+  - The default duration is 4 s, or 6 s when there is an action. `error` lasts 8 s, uses `role=alert` and has a close button.
   - At most 3 show at once. `data-testid="toast"` and `data-tone`.
   - The inverted ink style comes from the design.
 - **`Icon`**: an inline SVG set with `Icon.Check`, `X`, `Alert`, `Info`, `Refresh`, `Play`, `Pause`, `Pin`, `ChevronDown/Left/Right`, `More`, `Plus`, `Trash`, `Download`, `Upload`, `Lock`, `Notebook`, `Calendar`. All are `aria-hidden` and default to `size-4`.
@@ -177,7 +177,7 @@ Service tests in Node: put `import 'fake-indexeddb/auto'` first, then import `@/
 - **`@/logic/scheduler` (P1):** `PlanInput`, `PlanResult`, `OverflowItem` (re-export), `generatePlan(input)`. The **stand-in** keeps done/partial/skipped/pinned/manual blocks, removes the other planned auto blocks, and places `new` blocks (≤2 pomodoros, capacity- and blackout-aware, by exam−2, EDF order) with deterministic ids. It adds no reviews and no round-robin.
 - **`@/logic/scheduler/planService` (P1):** `PlanSummary`, `replan(opts?)`, `catchUpOnOpen()`. The stand-in runs one Dexie transaction, counts past-due planned auto blocks as `movedCount`, writes `meta.plan` and records `lastCatchUp` on catch-up. It already moves the seed's 2 missed blocks to today or later (verified by the smoke test).
 - **`PlanSync` / `PlanStatusBar` (P1):** default exports with no props, mounted in `Layout` (PlanSync, then PlanStatusBar between the header and `<main>`; Layout does **not** render PlanStatusBar on `/focus`). PlanStatusBar supplies its own wrapper (`mx-auto w-full max-w-page px-4 md:px-6 xl:px-8 pt-3 flex flex-col gap-2`, see the stub). The stand-in PlanSync runs `catchUpOnOpen()` once (a module-level guard handles StrictMode). **It does NOT auto-replan yet.** P1 must add the debounced 500 ms live-query replan on subjects/exams/topics/settings, because the user confirmed auto-replan is ON. The stand-in PlanStatusBar renders the `plan-status` row with `replan-button` (loading label `Replanning…`, toast `Plan rebuilt`).
-- **`@/logic/timer` (P2):** `TimerPhase`, `TimerSnapshot`, `TimerApi`, `TimerProvider({children}): JSX.Element`, `useTimer(): TimerApi`. The stand-in returns an idle 25:00 focus with no-op actions. `TimerProvider` wraps `BrowserRouter` in `App.tsx`, so **P2's provider cannot use router hooks** (read `?blockId` in FocusPage and pass it to `start(blockId)`). The file is `.ts`: P2 can move the implementation into `.tsx` modules inside `src/logic/timer/` and re-export them from `index.ts`.
+- **`@/logic/timer` (P2):** `TimerPhase`, `TimerSnapshot`, `TimerApi`, `TimerProvider({children}): JSX.Element`, `useTimer(): TimerApi`. The stand-in returns an idle 25:00 focus with no-op actions. `TimerProvider` wraps `BrowserRouter` in `App.tsx` (and sits inside `ToastProvider`, so it **can** call `useToast()`), so **P2's provider cannot use router hooks** (read `?blockId` in FocusPage and pass it to `start(blockId)`). The file is `.ts`: P2 can move the implementation into `.tsx` modules inside `src/logic/timer/` and re-export them from `index.ts`.
 - **Pages** (default export, render an `<h1>`): `TodayPage`, `WeekPage` (P4), `FocusPage` (P2), `SetupPage`, `SettingsPage` (P3), `DashboardPage`, `DataPage` (P5). Keep the default export and file path, because `src/app/routes.tsx` imports them. Keep an `<h1>` on each page, since the smoke test checks for a level-1 heading.
 
 ### Design tokens (`src/index.css`: real "Paper & Ink" values from `.pipeline/design/tokens.json`)
@@ -207,34 +207,33 @@ Colours are `--fp-*` variables on `:root` and `.dark`, exposed as Tailwind utili
   - `no-scrollbar`, `fade-x`
 
 ## Verification output
-Fix-round-1, run from `app/`:
+Fix-round-2, run from `app/`, with every phase's code present:
 ```
-> npm run build  (after rm -rf dist node_modules/.tmp)
+> npm run build
 > tsc -b && vite build
-dist/index.html                   0.57 kB │ gzip:   0.35 kB
-dist/assets/index-ClNPToM6.css   25.96 kB │ gzip:   6.16 kB
-dist/assets/index-XPkd2eHi.js   398.50 kB │ gzip: 127.45 kB
-✓ built in 369ms
+✓ 977 modules transformed.
+dist/index.html                           1.08 kB │ gzip:   0.50 kB
+dist/assets/index-Bxpou5Dx.css           40.67 kB │ gzip:   8.65 kB
+dist/assets/TodayPage-*.js                6.95 kB   (and one chunk per page, 10-30 kB each)
+dist/assets/FocusChart-*.js             360.11 kB │ gzip: 104.37 kB   (recharts, now split out)
+dist/assets/index-*.js                  407.40 kB │ gzip: 130.82 kB   (was 553 kB, so the >500 kB warning is gone)
+✓ built in 6.67s
 
 > npm run test:unit
- Test Files  2 passed (2)
-      Tests  15 passed (15)
-
-> npx playwright test tests/e2e/smoke.spec.ts
-  ok shell at 375px: every nav test id exists exactly once and is reachable
-  ok replan-button is present in the shell
-  ok catch-up on open leaves no planned block before today and plans work
-  ok design tokens: self-hosted fonts only, dark mode follows the system
-  ok AC-P0-3: first load seeds the demo exactly once
-  ok AC-P0-4: deep link to /week renders the app
-  ok AC-P0-2: / redirects to /today and nav switches routes client-side without errors
-  ok shell: status bar hidden on /focus, unknown route redirects, nav-home links to /today
-  8 passed (12.1s)
+ Test Files  12 passed (12)
+      Tests  165 passed (165)
 
 > npm run lint
 > oxlint        (0 warnings, 0 errors)
+
+> npx playwright test tests/e2e/smoke.spec.ts
+  10 passed (7.8s)   (AC-P0-2/3/4, shell at 375, /focus shell, tokens and dark mode, replan, catch-up,
+                      fonts 200 for IBM Plex Mono 300/400/500, h1 focused after a lazy route change)
 ```
-I also took screenshots of the shell at 375 and 1280 px. Fraunces and Instrument Sans loaded from `/fonts/`, the nav is two rows at 375 and one row at 1280, and no focus ring shows on first load.
+The toast action was also checked in a real browser with a temporary probe (since removed):
+- `toast-undo` renders "Undo", and clicking it runs `onClick` once and dismisses the toast.
+- A custom `testId` works, and an async `onClick` that throws is caught and logged.
+- Plain and numeric-duration calls still work.
 
 ## Open questions / cross-phase requests
 - **`src/index.css` belongs to P0.** Frontend phases (P2–P5) must not edit it. If they need a new token, value or shared utility, they should request it in their handoff and the manager will route it to P0. The design package tokens were applied in fix-round-1.
@@ -245,7 +244,7 @@ I also took screenshots of the shell at 375 and 1280 px. Fraunces and Instrument
 - **Unit tests are type-checked by `npm run build`**, because `tsconfig.app.json` includes all of `src/`. Tests must compile under the browser type set (`vite/client`, DOM, no `@types/node` globals).
 - **P1:** the seed's missed blocks reuse the deterministic ids `auto:<topicId>:new:1`. They get deleted and regenerated (same id pattern) at today or later. Kept history blocks also use `auto:<topicId>:new:1` (Limits, Kinematics), so id numbering has to skip ids that are already kept (the stand-in does this).
 - **P1:** `movedCount` in the stand-in counts every planned, unpinned auto block dated before today, which is 2 on a fresh seed. That matches AC-P1-6's "Moved 2 missed blocks".
-- **P2:** `TimerProvider` sits outside `BrowserRouter` (master-plan §4.1 order), so it cannot use router hooks there.
+- **P2:** `TimerProvider` sits outside `BrowserRouter` (master-plan §4.1 order), so it cannot use router hooks there. Since fix-round-2 it sits inside `ToastProvider`, so it can call `useToast()` directly on any route.
 - **P5:** for import, use `db.transaction('rw', allTables(), ...)`. For readiness overflow, use `getPlanMeta()`.
 - **Git:** the git repo is at the project root. `app/.gitignore` excludes `node_modules`, `dist`, `test-results` and `playwright-report`. Nothing was committed.
 
@@ -270,3 +269,38 @@ I also took screenshots of the shell at 375 and 1280 px. Fraunces and Instrument
 - **Card:** new `variant` prop.
 - **SubjectChip:** new `testId` prop.
 - **Pages must set their own max width**, because `<main>` no longer constrains it.
+
+### Fix-round-2 (wave-2 cross-phase requests)
+| Bug ID | Root cause | Fix | Files |
+|---|---|---|---|
+| FR2-toast-action (P4) | `useToast().show` had no action slot, so there was no way to offer Undo after Skip | Added `ToastOptions` and `ToastAction` (see the API below). The action renders as a button (`data-testid="toast-undo"` by default). Clicking it dismisses the toast and then runs `onClick`; async errors are caught and logged. Old calls `show(msg)`, `show(msg, tone)` and `show(msg, tone, ms)` behave as before | `app/src/components/ui/toastContext.ts`, `Toast.tsx`, `index.ts` |
+| FR2-provider-order (P2) | `TimerProvider` sat outside `ToastProvider`, so `useToast()` was unavailable inside the timer provider and save-error toasts only showed where `FocusPage` was mounted | New order: `ToastProvider → TimerProvider → BrowserRouter → routes`. The toast viewport is still rendered once, by `ToastProvider`. The timer stays outside the router | `app/src/app/App.tsx` |
+| FR2-mono-font (P4) | **No mismatch found.** The `@font-face` family `'IBM Plex Mono'` equals `--font-mono`'s first family, all 3 woff2 files return 200 `font/woff2`, and `document.fonts` shows 300/400/500 `loaded`. The fallback in the screenshots was a first-paint effect: `font-display: swap` plus fonts being fetched lazily on first use, so an immediate screenshot catches the fallback | Added `<link rel="preload" as="font" crossorigin>` for Instrument Sans, Fraunces and IBM Plex Mono Regular in `index.html`, so first paint uses them. Added an e2e test for the 200 responses and loaded faces. **QA tip:** before screenshots, `await page.evaluate(() => document.fonts.ready)`. Light (300, timer) and Medium are not preloaded, to avoid unused-preload warnings on other routes | `app/index.html`, `app/tests/e2e/smoke.spec.ts` |
+| FR2-lazy-routes (P5, optional) | A single 553 kB bundle triggered the >500 kB warning | The 7 pages use `React.lazy`. `Layout` wraps `<Outlet/>` in `<Suspense fallback={<PageFallback/>}>` inside the page error boundary; the fallback is `LoadingBlock testId="page-loading"` plus skeletons. Route-change focus now waits (a MutationObserver, up to 3 s) for the lazily rendered `<h1>`, and re-focuses it only if a page swaps its h1 (for example loading, then loaded) while focus has dropped to `<body>`. It never steals user focus. Covered by a new e2e test | `app/src/app/routes.tsx`, `app/src/app/Layout.tsx` |
+
+**Toast action API (exact)**, exported from `@/components/ui`:
+```ts
+export type ToastTone = 'success' | 'error' | 'info'
+export interface ToastAction {
+  label: string                          // button text, e.g. 'Undo'
+  onClick: () => void | Promise<void>    // runs after the toast is dismissed; rejections are caught + console.error
+  testId?: string                        // default 'toast-undo'
+}
+export interface ToastOptions {
+  durationMs?: number                    // default 4000; 6000 when `action` is set; 8000 for tone 'error'
+  action?: ToastAction
+}
+export interface ToastApi {
+  show(message: string, tone?: ToastTone, options?: number | ToastOptions): void   // number = durationMs (legacy)
+}
+// P4 usage, Undo after Skip:
+toast.show(`Skipped ${title}`, 'success', { action: { label: 'Undo', onClick: () => undoSkip(block.id) } })
+```
+Other behaviour:
+- The toast pauses its countdown while hovered or focused.
+- At most 3 toasts show; the oldest drops first.
+- Each toast has `data-testid="toast"` and `data-tone`.
+
+**Notes for other phases:**
+- Pages are now lazy chunks: keep the default export on every `*Page.tsx`.
+- The `page-loading` test id can appear for a moment during navigation.
