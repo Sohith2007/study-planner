@@ -8,24 +8,24 @@
       "agent_id": "ad45dc23b0a909e9d"
     },
     "P1": {
-      "status": "running",
-      "agent_id": ""
+      "status": "done",
+      "agent_id": "a78053ff959f81668"
     },
     "P2": {
-      "status": "running",
-      "agent_id": ""
+      "status": "done",
+      "agent_id": "a72804bdfc635956d"
     },
     "P3": {
-      "status": "running",
-      "agent_id": ""
+      "status": "done",
+      "agent_id": "a4c7df31ed16484f3"
     },
     "P4": {
-      "status": "running",
-      "agent_id": ""
+      "status": "partial",
+      "agent_id": "a24cdb08da9df11d2"
     },
     "P5": {
-      "status": "running",
-      "agent_id": ""
+      "status": "done",
+      "agent_id": "a33c24801c7e27b7a"
     }
   },
   "designer": {
@@ -57,5 +57,10 @@
   ],
   "decisions": {
     "auto_replan": true
-  }
+  },
+  "pending_cross_phase": [
+    "P0: useToast().show() optional action rendering toast-undo (from P4)",
+    "P0: verify font-mono self-hosted IBM Plex Mono actually applies (from P4)",
+    "P0 optional: lazy-load routes to cut bundle size (from P5)"
+  ]
 }
