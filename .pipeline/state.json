@@ -1,11 +1,58 @@
 {
   "slug": "study-planner-pomodoro",
   "problem_statement": "Create an application of study planner for students with pomodoro timer",
-  "stage": "checkpoint1",
-  "phases": {},
-  "designer": { "status": "pending", "agent_id": "" },
-  "researcher": { "status": "done", "agent_id": "abe82fd35558eca11" },
+  "stage": "checkpoint2",
+  "phases": {
+    "P0": {
+      "status": "pending",
+      "agent_id": ""
+    },
+    "P1": {
+      "status": "pending",
+      "agent_id": ""
+    },
+    "P2": {
+      "status": "pending",
+      "agent_id": ""
+    },
+    "P3": {
+      "status": "pending",
+      "agent_id": ""
+    },
+    "P4": {
+      "status": "pending",
+      "agent_id": ""
+    },
+    "P5": {
+      "status": "pending",
+      "agent_id": ""
+    }
+  },
+  "designer": {
+    "status": "pending",
+    "agent_id": ""
+  },
+  "researcher": {
+    "status": "done",
+    "agent_id": "abe82fd35558eca11"
+  },
   "qa_round": 0,
   "bug_history": [],
-  "updated": "2026-09-19"
+  "updated": "2026-09-19",
+  "architect": {
+    "status": "done",
+    "agent_id": "ab9d832f946707196"
+  },
+  "waves": [
+    [
+      "P0"
+    ],
+    [
+      "P1",
+      "P2",
+      "P3",
+      "P4",
+      "P5"
+    ]
+  ]
 }

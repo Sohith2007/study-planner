@@ -1,0 +1,230 @@
+{
+  "product": "FocusPlan",
+  "stack": {
+    "frontend": "Vite 8 + React 19 + TypeScript + React Router 7 (BrowserRouter) + Tailwind CSS 4 (@tailwindcss/vite)",
+    "backend": "none (client-only SPA; module contracts replace an HTTP API)",
+    "data": "IndexedDB via Dexie 4 + dexie-react-hooks (useLiveQuery); running timer mirrored to localStorage",
+    "utilities": "date-fns, recharts, clsx",
+    "auth": "none",
+    "testing": "Playwright (e2e, Chromium, page.clock) + Vitest (unit) + fake-indexeddb"
+  },
+  "commands": {
+    "install": "npm install && npx playwright install chromium",
+    "dev": "npm run dev",
+    "build": "npm run build",
+    "test": "npx playwright test",
+    "base_url": "http://localhost:5173"
+  },
+  "features": [
+    { "id": "F1", "name": "Subjects, exams and topics setup (with quick-add)", "priority": "must", "usp": "#1", "phase_id": "P3" },
+    { "id": "F2", "name": "Study availability settings (weekday capacity, timer lengths, blackout dates, daily goal)", "priority": "must", "usp": "#1, #3", "phase_id": "P3" },
+    { "id": "F3", "name": "Auto plan generator (spaced, exam-backward, capacity-aware)", "priority": "must", "usp": "#1", "phase_id": "P1" },
+    { "id": "F4", "name": "Today and Week views (queue, grid, add/edit/move/delete, ad-hoc tasks)", "priority": "must", "usp": "#1, #2", "phase_id": "P4" },
+    { "id": "F5", "name": "Pomodoro timer linked to blocks (timestamp-based, notifications, title, Flowtime)", "priority": "must", "usp": "#2", "phase_id": "P2" },
+    { "id": "F6", "name": "Session completion and topic progress (done/partial/skip, covered + confidence)", "priority": "must", "usp": "#2, #4", "phase_id": "P4" },
+    { "id": "F7", "name": "Auto catch-up rescheduling (on open, Replan button, over-capacity warning)", "priority": "must", "usp": "#3", "phase_id": "P1" },
+    { "id": "F8", "name": "Dashboard and stats (readiness, countdown, focus minutes, 7-day chart, streak)", "priority": "must", "usp": "#4", "phase_id": "P5" },
+    { "id": "F9", "name": "Local-first persistence, JSON export/import, reset demo / clear data", "priority": "must", "usp": "#5", "phase_id": "P5" }
+  ],
+  "phases": [
+    {
+      "id": "P0",
+      "name": "Foundation",
+      "owner": "phase-engineer",
+      "depends_on": [],
+      "owns": [
+        "package.json",
+        "package-lock.json",
+        "index.html",
+        "vite.config.ts",
+        "tsconfig.json",
+        "tsconfig.app.json",
+        "tsconfig.node.json",
+        "playwright.config.ts",
+        ".gitignore",
+        "public/**",
+        "src/main.tsx",
+        "src/index.css",
+        "src/vite-env.d.ts",
+        "src/app/**",
+        "src/types/**",
+        "src/db/**",
+        "src/lib/**",
+        "src/components/**",
+        "tests/e2e/**",
+        "src/logic/scheduler/index.ts",
+        "src/logic/scheduler/planService.ts",
+        "src/features/plan-status/PlanSync.tsx",
+        "src/features/plan-status/PlanStatusBar.tsx",
+        "src/logic/timer/index.ts",
+        "src/features/planner/TodayPage.tsx",
+        "src/features/planner/WeekPage.tsx",
+        "src/features/focus/FocusPage.tsx",
+        "src/features/setup/SetupPage.tsx",
+        "src/features/settings/SettingsPage.tsx",
+        "src/features/dashboard/DashboardPage.tsx",
+        "src/features/data/DataPage.tsx"
+      ],
+      "features": [],
+      "tasks": [
+        "Scaffold Vite react-ts in app/. Install ALL deps now: react, react-dom, react-router, dexie, dexie-react-hooks, date-fns, recharts, clsx; dev: typescript, vite, @vitejs/plugin-react, tailwindcss, @tailwindcss/vite, vitest, fake-indexeddb, @playwright/test, @types/node. Scripts: dev (vite --port 5173 --strictPort), build (tsc -b && vite build), preview, test:unit (vitest run), test:e2e (playwright test)",
+        "Tailwind 4 via @import \"tailwindcss\"; map design tokens from .pipeline/design/ to @theme variables in src/index.css",
+        "src/types: Subject, Exam, Topic, Block, FocusSession, Settings, MetaRecord exactly as master-plan section 4.2",
+        "src/db: Dexie db 'focusplan' v1 (subjects, exams, topics, blocks, sessions, settings, meta), getSettings/saveSettings, deleteExamCascade, deleteSubjectCascade, seedIfEmpty, resetToDemo, clearAll; demo seed relative to today per master-plan 4.2 (incl. 2 missed planned blocks yesterday, manual task today, 5 days x 4 focus sessions)",
+        "src/lib: todayISO, addDaysISO, weekdayOf, startOfWeekISO (Monday), daysBetween, formatting helpers, newId",
+        "src/app: bootstrap (await seedIfEmpty before render), Layout with NavBar (nav-today, nav-week, nav-focus, nav-setup, nav-settings, nav-dashboard, nav-data), PlanSync + PlanStatusBar mounted above Outlet, routes per master-plan 4.3, wrap in TimerProvider",
+        "src/components/ui: Button, Card, Badge, Modal (confirm dialog), Field (label+input+error), EmptyState, Toast",
+        "Contract stubs with frozen signatures (master-plan 4.3): naive generatePlan (new blocks only), replan/catchUpOnOpen, PlanSync/PlanStatusBar placeholders, TimerProvider/useTimer idle no-op; page stubs rendering an h1",
+        "playwright.config.ts (testDir tests/e2e, chromium, baseURL http://localhost:5173, webServer npm run dev, reuseExistingServer) + tests/e2e/smoke.spec.ts; vitest config (src/**/*.test.ts, node env)"
+      ],
+      "acceptance_criteria": [
+        { "id": "AC-P0-1", "text": "npm run build in app/ exits 0 with no TypeScript errors." },
+        { "id": "AC-P0-2", "text": "Visiting / redirects to /today; the nav shows Today, Week, Focus, Setup, Settings, Dashboard, Data (nav-*) and clicking each changes URL and heading without a full page reload or console errors." },
+        { "id": "AC-P0-3", "text": "In a fresh browser context, IndexedDB database 'focusplan' contains 3 subjects, 3 exams, 12 topics and 1 settings row after first load; after reload there are still 3 subjects (no duplicate seeding).", "feature_id": "F9" },
+        { "id": "AC-P0-4", "text": "Directly loading /week (deep link / reload) renders the app, not a 404." },
+        { "id": "AC-P0-5", "text": "npx playwright test tests/e2e/smoke.spec.ts passes and npm run test:unit runs and exits 0." }
+      ]
+    },
+    {
+      "id": "P1",
+      "name": "Scheduler engine and catch-up",
+      "owner": "phase-engineer",
+      "depends_on": ["P0"],
+      "owns": [
+        "src/logic/scheduler/**",
+        "src/features/plan-status/**"
+      ],
+      "features": ["F3", "F7"],
+      "tasks": [
+        "Implement pure deterministic generatePlan(PlanInput): PlanResult per master-plan 4.3 scheduler rules: remaining work per topic, new blocks <= 2 pomodoros, 1-pomodoro reviews at settings.reviewOffsets after last new block (+1 extra if confidence 1), new work by exam-2, reviews by exam-1, EDF + round-robin across subjects, daily capacity minus kept blocks, blackout days skipped, overflow list, deterministic ids auto:<topicId>:<kind>:<n>",
+        "Implement replan() and catchUpOnOpen() in a Dexie transaction: keep done/partial/skipped/pinned/manual blocks, remove planned unpinned auto blocks dated >= today and past-due planned auto blocks (counted as movedCount), write created blocks and meta.plan {lastPlannedAt, overflow, lastCatchUp}",
+        "PlanSync: catchUpOnOpen once on mount; liveQuery on subjects/exams/topics/settings (NOT blocks) and debounced (500ms) replan on change",
+        "PlanStatusBar: replan-button, dismissible catchup-notice 'Moved N missed blocks', overcapacity-banner listing unscheduled pomodoros per exam with a link to Settings and a 'Trim reviews' action (drop largest review offset, replan)",
+        "Vitest: >= 12 scheduler/service tests (fake-indexeddb for service)"
+      ],
+      "acceptance_criteria": [
+        { "id": "AC-P1-1", "text": "On first load of the demo, the blocks table (and Week view) contains auto 'new' blocks for every uncovered seed topic whose pomodoros sum to that topic's estimate; covered topics (Limits, Kinematics) get no new blocks.", "feature_id": "F3" },
+        { "id": "AC-P1-2", "text": "For every date, the sum of planned pomodoros of blocks on that day is <= that weekday's capacity; after adding a blackout date in Settings no block is dated on it.", "feature_id": "F3" },
+        { "id": "AC-P1-3", "text": "No block for an exam is dated on or after its exam date; no 'new' block for an exam is on the day before it; each topic's review blocks are dated after its last new block at the configured offsets where they fit.", "feature_id": "F3" },
+        { "id": "AC-P1-4", "text": "On any day with capacity >= 4 while two or more exams have pending work, blocks from at least 2 different subjects are present (interleaving).", "feature_id": "F3" },
+        { "id": "AC-P1-5", "text": "Marking a topic covered with confidence 1 results in exactly one extra 'review' block for that topic after the automatic replan.", "feature_id": "F3" },
+        { "id": "AC-P1-6", "text": "On first open of the demo, no 'planned' block is dated before today and catchup-notice reads 'Moved 2 missed blocks'; Derivatives and Alkanes work is scheduled today or later.", "feature_id": "F7" },
+        { "id": "AC-P1-7", "text": "Clicking replan-button leaves done/partial/skipped blocks, manual tasks and pinned blocks unchanged (same id and date); running it twice in a row yields the identical block set (same ids and dates).", "feature_id": "F7" },
+        { "id": "AC-P1-8", "text": "Setting every weekday capacity to 1 in Settings shows overcapacity-banner with unscheduled pomodoro counts; clicking 'Trim reviews' lowers the unscheduled count; restoring the seed capacities hides the banner.", "feature_id": "F7" },
+        { "id": "AC-P1-9", "text": "npm run test:unit passes >= 12 scheduler/service tests covering capacity, blackout, exam cutoff, day-before rule, interleaving, confidence review, overflow, catch-up and idempotency.", "feature_id": "F3" }
+      ]
+    },
+    {
+      "id": "P2",
+      "name": "Pomodoro timer engine and Focus screen",
+      "owner": "phase-engineer",
+      "depends_on": ["P0"],
+      "owns": [
+        "src/logic/timer/**",
+        "src/features/focus/**"
+      ],
+      "features": ["F5"],
+      "tasks": [
+        "Pure reducer driven by startedAt/endsAt/pausedRemainingMs; remaining = endsAt - Date.now(); tick every 250ms and on visibilitychange",
+        "Persist to localStorage key focusplan.timer.v1 and restore on load (complete phases that ended while closed)",
+        "Phases: focus -> shortBreak, longBreak after every settings.longBreakEvery focuses; lengths from settings",
+        "Flowtime mode: count-up focus; timer-end-flow starts break of max(1, round(focusMinutes/5)) minutes; credit floor(elapsed/focusMinutes) pomodoros (min 1 if >= 1 minute)",
+        "On focus end: write sessions row; increment block.completedPomodoros and set status done when full; if block missing, save session with topic/exam/subject captured at start",
+        "Notifications (permission on first Start, graceful when denied, gated by settings.notificationsEnabled), Web Audio chime (gated by soundEnabled), document.title 'MM:SS · <Phase> — FocusPlan' / 'FocusPlan' when idle",
+        "FocusPage: timer-display, timer-phase, timer-start/pause/resume/skip/reset, timer-active-block (topic, subject, n/m), timer-mode switch, timer-end-flow, free focus when no blockId",
+        "Vitest: >= 8 reducer tests"
+      ],
+      "acceptance_criteria": [
+        { "id": "AC-P2-1", "text": "With seed settings, idle /focus shows timer-display '25:00' and timer-phase 'Focus'; Start counts down; Pause freezes the value (unchanged after 5s of clock time); Resume continues.", "feature_id": "F5" },
+        { "id": "AC-P2-2", "text": "Using the Playwright clock, start focus and fast-forward 10 minutes (simulating a throttled background tab): display reads 15:00 +/- 1s; after a page reload the timer is still running with about the same remaining time.", "feature_id": "F5" },
+        { "id": "AC-P2-3", "text": "When focus expires the phase switches to 'Short break' at 05:00; after the 4th completed focus it is 'Long break' at 15:00; Skip advances without crediting a pomodoro; Reset returns to idle Focus 25:00.", "feature_id": "F5" },
+        { "id": "AC-P2-4", "text": "While running, document.title has the form 'MM:SS · Focus — FocusPlan' (or Short break / Long break); after Reset it is 'FocusPlan'.", "feature_id": "F5" },
+        { "id": "AC-P2-5", "text": "Opening /focus?blockId=<id> for a planned 2-pomodoro block and completing one focus shows timer-active-block '1/2', stores a completed 25-minute focus session, and Today shows the block at 1/2; after a second completed focus the block status is done.", "feature_id": "F5" },
+        { "id": "AC-P2-6", "text": "With Notification stubbed and permission granted, focus completion creates a notification whose title contains 'Focus complete'; with permission denied the timer still completes, no error is thrown and an inline hint says notifications are off.", "feature_id": "F5" },
+        { "id": "AC-P2-7", "text": "After setting focus 50 and short break 10 in Settings, the idle Focus page shows 50:00 and after that focus ends the break shows 10:00.", "feature_id": "F5" },
+        { "id": "AC-P2-8", "text": "In Flowtime mode (timer-mode) the display counts up from 00:00; after 20 minutes timer-end-flow starts a 04:00 break and a 20-minute focus session is stored.", "feature_id": "F5" },
+        { "id": "AC-P2-9", "text": "npm run test:unit passes >= 8 timer reducer tests (start, pause/resume, expiry, long-break cadence, skip, restore after reload, flowtime).", "feature_id": "F5" }
+      ]
+    },
+    {
+      "id": "P3",
+      "name": "Setup and availability settings UI",
+      "owner": "frontend-engineer",
+      "depends_on": ["P0"],
+      "owns": [
+        "src/features/setup/**",
+        "src/features/settings/**"
+      ],
+      "features": ["F1", "F2"],
+      "tasks": [
+        "/setup: subject CRUD (name, colour picker with 8 presets), exam CRUD grouped under subjects (name, date, countdown 'in N days'), topic CRUD under each exam (name, estimate 1-20, difficulty, covered badge, confidence display)",
+        "Quick-add textarea (one topic per line, blank lines ignored, defaults estimate 2 / medium); confirm dialogs for cascading deletes (deleteExamCascade, deleteSubjectCascade)",
+        "/settings: capacity-0..capacity-6 inputs shown Mon..Sun (0-16), focus/short/long lengths, long-break cadence, default mode, daily goal, blackout dates add/remove, sound and notification toggles; settings-save with 'Settings saved' toast",
+        "Inline validation everywhere; follow .pipeline/design/"
+      ],
+      "acceptance_criteria": [
+        { "id": "AC-P3-1", "text": "Adding subject 'Biology' with a colour shows it in the subject list with that colour swatch, and it is still there after reload.", "feature_id": "F1" },
+        { "id": "AC-P3-2", "text": "Adding exam 'Cell Biology Final' for Biology dated today+12 shows it under Biology with countdown 'in 12 days'.", "feature_id": "F1" },
+        { "id": "AC-P3-3", "text": "Submitting quick-add with four lines 'Cells', 'Genetics', '' (blank), 'Evolution' creates exactly 3 topics, each estimate 2 and difficulty medium, shown without a page reload.", "feature_id": "F1" },
+        { "id": "AC-P3-4", "text": "A topic's estimate can be edited to 4 and difficulty to hard and both persist after reload; deleting an exam after confirmation removes the exam, its topics and its blocks; cancelling the confirmation removes nothing.", "feature_id": "F1" },
+        { "id": "AC-P3-5", "text": "An empty subject/exam/topic name shows an inline error and saves nothing; an exam date before today is rejected; an estimate outside 1-20 is rejected.", "feature_id": "F1" },
+        { "id": "AC-P3-6", "text": "/settings shows capacity inputs prefilled Mon-Fri 6, Sat 8, Sun 4; changing Wednesday (capacity-3) to 3 and clicking settings-save shows a 'Settings saved' toast and the value is still 3 after reload.", "feature_id": "F2" },
+        { "id": "AC-P3-7", "text": "Focus/short/long lengths, long-break cadence, mode and daily goal save and persist; out-of-range values (focus 5-120, short 1-30, long 5-60, cadence 2-8, goal 1-16) show inline errors and are not saved.", "feature_id": "F2" },
+        { "id": "AC-P3-8", "text": "Adding a blackout date lists it and it can be removed; blackout dates before today cannot be added.", "feature_id": "F2" }
+      ]
+    },
+    {
+      "id": "P4",
+      "name": "Planner UI: Today, Week and block progress",
+      "owner": "frontend-engineer",
+      "depends_on": ["P0"],
+      "owns": [
+        "src/features/planner/**"
+      ],
+      "features": ["F4", "F6"],
+      "tasks": [
+        "/today: date heading, 'X / Y pomodoros planned' vs today's capacity, ordered today-block queue (topic/title, subject colour chip, New/Review/Task badge, 'n/m pomodoros', status, Covered badge), start-next linking to /focus?blockId=<first planned block>, empty state 'All done for today' (links to Setup when there is no data)",
+        "/week: 7-column Mon-Sun grid (week-day-<YYYY-MM-DD>) with block-card items, prev/next week, today highlighted",
+        "Block menu: edit pomodoros (and title for tasks), Move via date input and native HTML5 drag-and-drop between Week columns (sets pinned=true), delete with confirm",
+        "Add-task form (title, date, pomodoros 1-8, optional subject) creating kind 'task', source 'manual'",
+        "Completion actions Done / Partial (choose 1..m-1, status partial) / Skip; after a New block is marked Done show a 'Topic check' dialog to mark the topic covered with confidence 1-3 (writes topic.covered and topic.confidence)"
+      ],
+      "acceptance_criteria": [
+        { "id": "AC-P4-1", "text": "With the Playwright clock fixed to a weekday, /today shows at least one today-block each with topic, subject, a New/Review/Task badge and '0/n pomodoros'; the manual task 'Problem set 3' appears with a Task badge.", "feature_id": "F4" },
+        { "id": "AC-P4-2", "text": "Clicking start-next navigates to /focus?blockId=<id of first planned block> and the Focus page shows that block's topic; when all of today's blocks are done or skipped Today shows the empty state 'All done for today'.", "feature_id": "F4" },
+        { "id": "AC-P4-3", "text": "/week shows 7 week-day-* columns Monday through Sunday of the current week with today highlighted; Next/Prev change the columns to the following/previous week.", "feature_id": "F4" },
+        { "id": "AC-P4-4", "text": "Adding task 'Read chapter 4' (today+1, 2 pomodoros, Physics) shows it in that day's Week column with a Task badge, and it is still there after clicking replan-button.", "feature_id": "F4" },
+        { "id": "AC-P4-5", "text": "Moving an auto block to another date via the Move date input, and separately by dragging it to another Week column, shows it in the new column after reload and it keeps that date after a replan; editing a block's pomodoros to 1 persists; deleting a block after confirmation removes it.", "feature_id": "F4" },
+        { "id": "AC-P4-6", "text": "Marking a block Done shows done styling and 'm/m pomodoros'; Partial with 1 shows '1/m' and a partial badge; Skip shows skipped styling and the block is no longer the start-next target.", "feature_id": "F6" },
+        { "id": "AC-P4-7", "text": "After marking a New block Done the Topic check dialog appears; choosing 'Covered' with confidence 3 shows a Covered badge on that topic's blocks and in Setup; choosing 'Not yet' leaves the topic uncovered.", "feature_id": "F6" }
+      ]
+    },
+    {
+      "id": "P5",
+      "name": "Dashboard, stats and data management",
+      "owner": "frontend-engineer",
+      "depends_on": ["P0"],
+      "owns": [
+        "src/features/dashboard/**",
+        "src/features/data/**"
+      ],
+      "features": ["F8", "F9"],
+      "tasks": [
+        "stats.ts pure functions + Vitest tests: readiness(exam) = round(100 * done / (done + remaining)) where done = sum of min(completed, pomodoros) over the exam's new/review blocks and remaining = unfinished pomodoros of planned/partial blocks dated >= today plus the exam's overflow from meta.plan; focus minutes today and this week (Monday start) from focus sessions' actualMinutes; 7-day per-subject series; streak = consecutive days (from today, or from yesterday if today is not yet met) with completed focus sessions >= dailyGoalPomodoros",
+        "/dashboard: exam-card per upcoming exam sorted by date (name, subject chip, 'in N days', readiness %, 'X/Y topics covered'), focus-today and focus-week tiles, focus-chart (Recharts stacked bars, last 7 days, legend), streak-count; empty state when there are no exams",
+        "/data: export-button downloads focusplan-backup-YYYY-MM-DD.json {app:'focusplan', version:1, exportedAt, subjects, exams, topics, blocks, sessions, settings}; import-input validates the shape, confirms, then replaces everything in one transaction; reset-demo (resetToDemo) and clear-all (clearAll), both with confirmation"
+      ],
+      "acceptance_criteria": [
+        { "id": "AC-P5-1", "text": "On a fresh seed /dashboard shows 3 exam-cards ordered Organic Chemistry Quiz (in 7 days), Calculus Midterm (in 10 days), Mechanics Test (in 14 days), each with a readiness % between 0 and 100 and topics covered (Calculus 1/5, Mechanics 1/4, Chemistry 0/3).", "feature_id": "F8" },
+        { "id": "AC-P5-2", "text": "Marking a planned Calculus block Done on Today increases the Calculus readiness % on the Dashboard.", "feature_id": "F8" },
+        { "id": "AC-P5-3", "text": "On a fresh seed focus-week equals 25 x (number of seeded focus sessions dated this week) minutes and focus-today is 0; after one 25-minute focus completes, focus-today shows 25.", "feature_id": "F8" },
+        { "id": "AC-P5-4", "text": "focus-chart renders bars for the 7 days ending today with a legend naming Mathematics, Physics and Chemistry.", "feature_id": "F8" },
+        { "id": "AC-P5-5", "text": "streak-count shows 5 on a fresh seed and 6 after completing 4 focus sessions today.", "feature_id": "F8" },
+        { "id": "AC-P5-6", "text": "Clicking export-button downloads 'focusplan-backup-<today>.json' which parses with app 'focusplan', version 1, and contains 3 subjects, 3 exams and 12 topics.", "feature_id": "F9" },
+        { "id": "AC-P5-7", "text": "After clear-all (confirmed), Today shows an empty state linking to Setup and the Dashboard has no exam cards; importing the previously exported file (confirmed) restores 3 subjects, 3 exams and 12 topics; importing a malformed file shows an error and changes nothing.", "feature_id": "F9" },
+        { "id": "AC-P5-8", "text": "reset-demo (confirmed) restores the seed: 3 subjects and streak-count 5.", "feature_id": "F9" },
+        { "id": "AC-P5-9", "text": "During a full session (load, visit every route, run the timer) no requests go to any origin other than localhost:5173, and data created in Setup survives a browser reload.", "feature_id": "F9" }
+      ]
+    }
+  ]
+}
