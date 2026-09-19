@@ -1,7 +1,7 @@
 {
   "slug": "study-planner-pomodoro",
   "problem_statement": "Create an application of study planner for students with pomodoro timer",
-  "stage": "design_build",
+  "stage": "qa",
   "phases": {
     "P0": {
       "status": "done",
@@ -20,7 +20,7 @@
       "agent_id": "a4c7df31ed16484f3"
     },
     "P4": {
-      "status": "partial",
+      "status": "done",
       "agent_id": "a24cdb08da9df11d2"
     },
     "P5": {
@@ -36,7 +36,7 @@
     "status": "done",
     "agent_id": "abe82fd35558eca11"
   },
-  "qa_round": 0,
+  "qa_round": 1,
   "bug_history": [],
   "updated": "2026-09-19",
   "architect": {
@@ -58,9 +58,9 @@
   "decisions": {
     "auto_replan": true
   },
-  "pending_cross_phase": [
-    "P0: useToast().show() optional action rendering toast-undo (from P4)",
-    "P0: verify font-mono self-hosted IBM Plex Mono actually applies (from P4)",
-    "P0 optional: lazy-load routes to cut bundle size (from P5)"
-  ]
+  "pending_cross_phase": [],
+  "qa": {
+    "status": "running",
+    "agent_id": ""
+  }
 }

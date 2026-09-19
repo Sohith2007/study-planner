@@ -1,6 +1,6 @@
 # Handoff: P4 Planner UI: Today, Week and block progress
 
-> Owner: frontend-engineer · Status: done (one design item blocked on P0, see below) · Round: build
+> Owner: frontend-engineer · Status: done · Round: fix-round-1
 
 ## Features delivered
 | Feature | Status | Notes |
@@ -9,7 +9,7 @@
 | F4 Week view | ✅ done | Built to screens/week.md and wireframes/week.html. Includes the Mon–Sun grid (`week-day-<date>`, today highlighted, `aria-current="date"`), prev/This week/next navigation via `?start=` (invalid values are normalised with replace), load `X/Y` (warning colour when over), exam markers, blackout hatch, and the legend. At 375 it becomes an agenda where past days collapse behind `week-show-past`. At 768 it is a horizontal scroll row with today scrolled into view, and at lg+ it has 7 columns |
 | F4 Block menu, move, edit, delete, add task | ✅ done | The Edit dialog changes pomodoros (and the title for tasks). The Move dialog uses a date input. Native HTML5 drag-and-drop works between Week columns and appends to the target day's order. Moving or editing an auto block sets `pinned=true`. Delete goes through `ConfirmDialog` ("Delete block"). The Add task form creates `kind:'task', source:'manual'` |
 | F6 Completion actions | ✅ done | Done, Partial (segmented 1…m−1) and Skip work, with Undo on done/skipped rows and cards. Undo after Done restores the pre-Done `completedPomodoros` (kept in memory, falls back to 0). Topic check opens after Done on a `new` block whose topic is uncovered. **Covered** stays disabled until a confidence is picked, and it writes `topic.covered/confidence` |
-| Toast Undo action (`toast-undo`) | ⚠️ not done | The P0 `useToast().show()` has no action slot. Skip shows `Skipped <title>` without the button. Row and card `block-undo` provide the same action (accessibility.md: "the toast is never the only path"). See the cross-phase requests |
+| Toast Undo action (`toast-undo`) | ✅ done (fix-round-1) | Skip shows `Skipped <title>` with an **Undo** action (`toast-undo`) using P0's new toast action API. Row and card `block-undo` still offer the same action |
 
 ## Acceptance criteria self-check
 I ran a scratch Playwright script against the dev server using real "today" (Sat 19 Sep 2026) and a fresh seeded DB. I did not add a spec under tests/e2e/ because P0 owns that directory.
@@ -62,7 +62,7 @@ dist/assets/index-DCIHPzVl.js       527.17 kB │ gzip: 162.20 kB
 ```
 
 ## Open questions / cross-phase requests
-- **P0 (`src/components/ui/Toast.tsx`, `toastContext.ts`):** today.md needs a toast action button. Please add an optional action, e.g. `show(message, tone?, durationMs?, action?: { label: string; onClick(): void; testId?: string })`, that renders a button with `data-testid="toast-undo"` and stays for 8 s (accessibility.md). Once it exists, P4 will pass `{ label: 'Undo', testId: 'toast-undo', onClick: () => undoBlock(id) }` in `skip()` (BlockDialogs.tsx). This is a one-line change.
+- **P0 toast action:** resolved in fix-round-1 (P0 added `ToastOptions.action`).
 - **P1:** the Topic check writes only `topic.covered` and `topic.confidence`. The extra review for confidence 1 depends on PlanSync's debounced live replan on topic changes (P1 rule 3). The P0 stand-in PlanSync doesn't replan yet.
 - **P2:** AC-P4-2 and AC-P4-6 also need the Focus page to show the topic for `?blockId=` (`auto:<topicId>:…` ids are URL-encoded by `encodeURIComponent`).
 - **QA / tests/e2e (P0-owned):** please add planner specs for AC-P4-1…7. The test ids follow today.md and week.md. The Week card menu opens on click or Enter, so the status actions inside `block-card` are reached after clicking the card.
@@ -77,3 +77,4 @@ dist/assets/index-DCIHPzVl.js       527.17 kB │ gzip: 162.20 kB
 ## Fix log (bug-fix rounds only)
 | Bug ID | Root cause | Fix | Files |
 |---|---|---|---|
+| FR1-toast-undo | P0's toast had no action slot, so Skip's toast lacked Undo | `skip()` passes `{ action: { label: 'Undo', testId: 'toast-undo', onClick } }`. onClick undoes only if the block is still `skipped` (the row Undo may already have run). Rechecked: build exit 0, lint exit 0, unit tests 165/165 passed. Browser check: Skip showed "Skipped Problem set 3" and Undo, and clicking `toast-undo` returned the block to `planned` and dismissed the toast | `app/src/features/planner/BlockDialogs.tsx` |

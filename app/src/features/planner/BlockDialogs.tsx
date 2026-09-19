@@ -85,7 +85,17 @@ export function PlannerActions({
       skip: (block) =>
         void run(async () => {
           await markSkipped(block.id)
-          toast.show(`Skipped ${blockTitle(block, lookups)}`)
+          toast.show(`Skipped ${blockTitle(block, lookups)}`, 'success', {
+            action: {
+              label: 'Undo',
+              testId: 'toast-undo',
+              onClick: () =>
+                run(async () => {
+                  // Only undo if the block is still skipped (the row Undo may already have restored it).
+                  if ((await db.blocks.get(block.id))?.status === 'skipped') await undoBlock(block.id)
+                }),
+            },
+          })
         }),
       undo: (block) => void run(() => undoBlock(block.id)),
       openPartial: (block) => setDialog({ kind: 'partial', block }),
