@@ -1,11 +1,11 @@
 {
   "slug": "study-planner-pomodoro",
   "problem_statement": "Create an application of study planner for students with pomodoro timer",
-  "stage": "checkpoint2",
+  "stage": "design_build",
   "phases": {
     "P0": {
-      "status": "pending",
-      "agent_id": ""
+      "status": "done",
+      "agent_id": "ad45dc23b0a909e9d"
     },
     "P1": {
       "status": "pending",
@@ -29,8 +29,8 @@
     }
   },
   "designer": {
-    "status": "pending",
-    "agent_id": ""
+    "status": "done",
+    "agent_id": "a790554e67c5b01f7"
   },
   "researcher": {
     "status": "done",
@@ -54,5 +54,8 @@
       "P4",
       "P5"
     ]
-  ]
+  ],
+  "decisions": {
+    "auto_replan": true
+  }
 }

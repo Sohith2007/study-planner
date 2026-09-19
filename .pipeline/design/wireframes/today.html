@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Today — FocusPlan wireframe</title>
+<!-- Wireframe only: CDN fonts + Tailwind browser build. The app self-hosts fonts (AC-P5-9). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=IBM+Plex+Mono:wght@300;400;500&family=Instrument+Sans:wght@400..600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style type="text/tailwindcss">
+@custom-variant dark (&:where(.dark, .dark *));
+:root{--fp-bg:#F6F4EF;--fp-surface:#FFFDF9;--fp-sunken:#EFECE4;--fp-text:#1C1B19;--fp-muted:#5F5B53;--fp-border:#DDD8CC;--fp-border-strong:#8A8478;--fp-primary:#1F5C4A;--fp-primary-hover:#174A3B;--fp-primary-soft:#DCEBE4;--fp-on-primary:#FFFFFF;--fp-accent:#C23E22;--fp-accent-hover:#A3321A;--fp-accent-soft:#F8E4DC;--fp-on-accent:#FFFFFF;--fp-success:#45700F;--fp-success-soft:#E4EFD3;--fp-warning:#9A5B00;--fp-warning-soft:#FBEBC8;--fp-danger:#A8233A;--fp-danger-hover:#8C1B2F;--fp-danger-soft:#F8DEE2;--fp-break:#2D5B86;--fp-break-soft:#DCE7F2;--fp-overlay:rgb(28 27 25/.45);--fp-chart-unlinked:#8A8478;--fp-shadow-card:0 1px 0 rgb(28 27 25/.04),0 1px 3px rgb(28 27 25/.06);--fp-shadow-raised:0 6px 16px -4px rgb(28 27 25/.12),0 2px 4px rgb(28 27 25/.05);--fp-shadow-overlay:0 24px 48px -12px rgb(28 27 25/.28);color-scheme:light}
+.dark{--fp-bg:#161512;--fp-surface:#1F1E1A;--fp-sunken:#292823;--fp-text:#EDEAE2;--fp-muted:#A8A294;--fp-border:#34322C;--fp-border-strong:#77726A;--fp-primary:#6FC2A6;--fp-primary-hover:#8AD3BA;--fp-primary-soft:#1E3B32;--fp-on-primary:#0F2A22;--fp-accent:#F07A5C;--fp-accent-hover:#F4957D;--fp-accent-soft:#3E2219;--fp-on-accent:#1C0B06;--fp-success:#9CCB5E;--fp-success-soft:#26341A;--fp-warning:#E8B04A;--fp-warning-soft:#3D3017;--fp-danger:#F2788C;--fp-danger-hover:#F595A5;--fp-danger-soft:#3E1F25;--fp-break:#7FB0DE;--fp-break-soft:#1C2C3C;--fp-overlay:rgb(0 0 0/.6);--fp-chart-unlinked:#77726A;--fp-shadow-card:0 1px 0 rgb(0 0 0/.3);--fp-shadow-raised:0 6px 16px -4px rgb(0 0 0/.5);--fp-shadow-overlay:0 24px 48px -12px rgb(0 0 0/.7);color-scheme:dark}
+@theme inline{--color-bg:var(--fp-bg);--color-surface:var(--fp-surface);--color-sunken:var(--fp-sunken);--color-text:var(--fp-text);--color-muted:var(--fp-muted);--color-border:var(--fp-border);--color-border-strong:var(--fp-border-strong);--color-primary:var(--fp-primary);--color-primary-hover:var(--fp-primary-hover);--color-primary-soft:var(--fp-primary-soft);--color-on-primary:var(--fp-on-primary);--color-accent:var(--fp-accent);--color-accent-hover:var(--fp-accent-hover);--color-accent-soft:var(--fp-accent-soft);--color-on-accent:var(--fp-on-accent);--color-success:var(--fp-success);--color-success-soft:var(--fp-success-soft);--color-warning:var(--fp-warning);--color-warning-soft:var(--fp-warning-soft);--color-danger:var(--fp-danger);--color-danger-hover:var(--fp-danger-hover);--color-danger-soft:var(--fp-danger-soft);--color-break:var(--fp-break);--color-break-soft:var(--fp-break-soft);--color-overlay:var(--fp-overlay);--color-chart-unlinked:var(--fp-chart-unlinked);--font-display:"Fraunces",ui-serif,Georgia,serif;--font-sans:"Instrument Sans",ui-sans-serif,system-ui,sans-serif;--font-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;--text-caption:0.75rem;--text-caption--line-height:1rem;--text-small:0.875rem;--text-small--line-height:1.25rem;--text-body:1rem;--text-body--line-height:1.5rem;--text-lead:1.125rem;--text-lead--line-height:1.75rem;--text-heading:1.25rem;--text-heading--line-height:1.75rem;--text-title:1.5rem;--text-title--line-height:2rem;--text-display:2.25rem;--text-display--line-height:2.5rem;--text-stat:2.5rem;--text-stat--line-height:1;--text-timer:clamp(5.5rem,20vw,10rem);--text-timer--line-height:1;--text-timer--letter-spacing:-0.02em;--radius-sm:6px;--radius-md:10px;--radius-lg:16px;--radius-xl:24px;--shadow-card:var(--fp-shadow-card);--shadow-raised:var(--fp-shadow-raised);--shadow-overlay:var(--fp-shadow-overlay);--ease-standard:cubic-bezier(0.2,0,0,1);--ease-exit:cubic-bezier(0.4,0,1,1);--ease-calm:cubic-bezier(0.37,0,0.63,1);--container-page:72rem;--container-form:48rem;--container-focus:40rem;--container-dialog:30rem}
+@layer base{html{background:var(--fp-bg);color:var(--fp-text);font-family:var(--font-sans);-webkit-font-smoothing:antialiased}:focus-visible{outline:2px solid var(--fp-primary);outline-offset:2px}}
+</style>
+</head>
+<body class="min-h-dvh bg-bg text-text">
+<a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-60 focus:rounded-md focus:bg-surface focus:px-4 focus:py-2">Skip to content</a>
+
+<!-- ============ NAV (app shell, P0) ============ -->
+<header class="sticky top-0 z-30 border-b border-border bg-surface/90 backdrop-blur">
+  <div class="mx-auto flex max-w-page flex-wrap items-center gap-x-4 px-4 md:px-6 xl:flex-nowrap xl:px-8">
+    <a href="today.html" data-testid="nav-home" class="flex h-14 items-center gap-2 font-display text-heading font-semibold text-text"><span class="size-2 rounded-full bg-accent" aria-hidden="true"></span>FocusPlan</a>
+    <nav aria-label="Main" class="order-last w-full overflow-x-auto pb-2 xl:order-none xl:mx-auto xl:w-auto xl:pb-0">
+      <ul class="flex gap-1 whitespace-nowrap">
+        <li><a href="today.html" data-testid="nav-today" aria-current="page" class="inline-flex h-9 items-center rounded-full bg-primary-soft px-3 text-small font-medium text-primary">Today</a></li>
+        <li><a href="week.html" data-testid="nav-week" class="inline-flex h-9 items-center rounded-full px-3 text-small font-medium text-muted hover:bg-sunken hover:text-text">Week</a></li>
+        <li><a href="focus.html" data-testid="nav-focus" class="inline-flex h-9 items-center rounded-full px-3 text-small font-medium text-muted hover:bg-sunken hover:text-text">Focus</a></li>
+        <li><a href="setup.html" data-testid="nav-setup" class="inline-flex h-9 items-center rounded-full px-3 text-small font-medium text-muted hover:bg-sunken hover:text-text">Setup</a></li>
+        <li><a href="settings.html" data-testid="nav-settings" class="inline-flex h-9 items-center rounded-full px-3 text-small font-medium text-muted hover:bg-sunken hover:text-text">Settings</a></li>
+        <li><a href="dashboard.html" data-testid="nav-dashboard" class="inline-flex h-9 items-center rounded-full px-3 text-small font-medium text-muted hover:bg-sunken hover:text-text">Dashboard</a></li>
+        <li><a href="data.html" data-testid="nav-data" class="inline-flex h-9 items-center rounded-full px-3 text-small font-medium text-muted hover:bg-sunken hover:text-text">Data</a></li>
+      </ul>
+    </nav>
+    <!-- Timer pill: only when a timer runs and route != /focus -->
+    <a href="focus.html" data-testid="nav-timer" class="ml-auto inline-flex h-8 items-center gap-2 rounded-full bg-accent px-3 font-mono text-small tabular-nums text-on-accent xl:ml-0" aria-label="Timer running: 18 minutes 42 seconds left in Focus. Open Focus.">18:42 · Focus</a>
+  </div>
+</header>
+
+<!-- ============ PLAN STATUS BAR (P1) ============ -->
+<section aria-label="Plan status" class="mx-auto flex max-w-page flex-col gap-2 px-4 pt-3 md:px-6 xl:px-8">
+  <div data-testid="plan-status" class="flex items-center justify-between gap-3 text-small text-muted">
+    <p aria-live="polite">Plan up to date · rebuilt just now</p>
+    <button data-testid="replan-button" class="inline-flex h-9 items-center gap-2 rounded-md border border-border-strong bg-surface px-3 text-small font-medium text-text transition-colors duration-150 hover:bg-sunken"><span aria-hidden="true">↻</span>Replan</button>
+  </div>
+  <div role="status" class="flex items-start gap-3 rounded-lg bg-break-soft px-4 py-3 text-break">
+    <span aria-hidden="true" class="mt-0.5">⤳</span>
+    <div class="flex-1">
+      <p class="text-body font-semibold"><span data-testid="catchup-notice">Moved 2 missed blocks</span></p>
+      <p class="text-small">They're now on today or later, still before their exams.</p>
+    </div>
+    <button data-testid="catchup-dismiss" aria-label="Dismiss" class="inline-flex size-9 items-center justify-center rounded-md hover:bg-surface/60">✕</button>
+  </div>
+</section>
+
+<!-- ============ TODAY PAGE (P4) ============ -->
+<main id="main" class="mx-auto w-full max-w-page px-4 py-6 md:px-6 md:py-8 xl:px-8">
+  <div class="flex flex-col gap-6 md:gap-8">
+
+    <!-- Header -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div class="flex flex-col gap-1">
+        <p data-testid="today-date" class="text-caption font-semibold uppercase tracking-wider text-muted">Saturday, 19 September 2026</p>
+        <h1 tabindex="-1" class="font-display text-title font-semibold text-text md:text-display">Today</h1>
+      </div>
+      <div class="flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
+        <div data-testid="today-capacity" class="flex flex-col gap-1.5">
+          <p class="text-small text-text"><span class="font-mono tabular-nums">6 / 8</span> pomodoros planned</p>
+          <div class="flex gap-1" aria-hidden="true">
+            <span class="h-1.5 w-6 rounded-full bg-primary"></span><span class="h-1.5 w-6 rounded-full bg-primary"></span><span class="h-1.5 w-6 rounded-full bg-primary"></span><span class="h-1.5 w-6 rounded-full bg-primary"></span><span class="h-1.5 w-6 rounded-full bg-primary"></span><span class="h-1.5 w-6 rounded-full bg-primary"></span><span class="h-1.5 w-6 rounded-full bg-sunken"></span><span class="h-1.5 w-6 rounded-full bg-sunken"></span>
+          </div>
+        </div>
+        <button data-testid="add-task-open" class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-border-strong bg-surface px-4 text-body font-medium text-text transition-colors duration-150 hover:bg-sunken md:w-auto"><span aria-hidden="true">＋</span>Add task</button>
+      </div>
+    </div>
+
+    <!-- Up next hero -->
+    <section aria-labelledby="upnext-h" class="relative overflow-hidden rounded-xl border border-border bg-surface p-5 pl-7 shadow-card md:p-8 md:pl-10">
+      <span class="absolute inset-y-0 left-0 w-1" style="background:#10B981" aria-hidden="true"></span>
+      <div class="flex flex-col gap-5 xl:grid xl:grid-cols-[1fr_auto] xl:items-center xl:gap-8">
+        <div class="flex flex-col gap-2">
+          <p id="upnext-h" class="text-caption font-semibold uppercase tracking-wider text-muted">Up next</p>
+          <p class="font-display text-title font-semibold text-text">Alkanes</p>
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span class="inline-flex h-6 items-center rounded-sm bg-primary-soft px-2 text-caption font-medium text-primary">New</span>
+            <span class="inline-flex items-center gap-1.5 text-small text-muted"><span class="size-2.5 rounded-full" style="background:#10B981"></span>Chemistry</span>
+            <span class="text-small text-muted">for Organic Chemistry Quiz · in 7 days</span>
+            <span class="inline-flex h-6 items-center rounded-sm bg-warning-soft px-2 text-caption font-medium text-warning">Partial</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="flex gap-1" aria-hidden="true"><span class="size-2.5 rounded-full border-[1.5px] border-accent bg-accent"></span><span class="size-2.5 rounded-full border-[1.5px] border-accent"></span></span>
+            <span class="font-mono text-small tabular-nums text-text">1/2 pomodoros</span>
+          </div>
+        </div>
+        <a href="focus.html" data-testid="start-next" class="inline-flex h-14 w-full flex-col items-center justify-center rounded-lg bg-primary px-8 text-on-primary transition-colors duration-150 hover:bg-primary-hover xl:w-auto">
+          <span class="flex items-center gap-2 text-lead font-medium"><span aria-hidden="true">▶</span>Start next</span>
+          <span class="text-caption text-on-primary/80">25-min focus</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Queue -->
+    <section aria-labelledby="queue-h" class="flex flex-col gap-3">
+      <div class="flex items-baseline justify-between">
+        <h2 id="queue-h" class="text-heading font-semibold text-text">Today's queue</h2>
+        <p class="text-small text-muted">5 blocks · 8 pomodoros</p>
+      </div>
+      <ol data-testid="today-queue" class="flex flex-col gap-3">
+
+        <!-- done / review / covered -->
+        <li data-testid="today-block" data-status="done" data-kind="review" aria-label="Limits, Review, Mathematics, 1 of 1 pomodoro, done" class="relative flex flex-col gap-3 rounded-md border border-border bg-sunken py-4 pl-5 pr-4 md:flex-row md:items-center">
+          <span class="absolute inset-y-0 left-0 w-1 rounded-l-md" style="background:#6366F1" aria-hidden="true"></span>
+          <div class="flex flex-1 flex-col gap-1.5">
+            <p data-testid="block-title" class="text-body font-medium text-muted line-through">Limits</p>
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span data-testid="block-kind" class="inline-flex h-6 items-center rounded-sm bg-break-soft px-2 text-caption font-medium text-break">Review</span>
+              <span data-testid="block-subject" class="inline-flex items-center gap-1.5 text-small text-muted"><span class="size-2.5 rounded-full" style="background:#6366F1"></span>Mathematics</span>
+              <span class="text-small text-muted">for Calculus Midterm</span>
+              <span data-testid="block-covered" class="inline-flex h-6 items-center gap-1 rounded-sm bg-success-soft px-2 text-caption font-medium text-success">✓ Covered</span>
+              <span data-testid="block-status" class="inline-flex h-6 items-center gap-1 rounded-sm bg-success-soft px-2 text-caption font-medium text-success">✓ Done</span>
+              <span data-testid="block-progress" class="font-mono text-small tabular-nums text-muted">1/1 pomodoro</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 md:ml-auto">
+            <button data-testid="block-undo" class="inline-flex h-11 items-center rounded-md px-3 text-small font-medium text-primary hover:bg-primary-soft md:h-9">Undo</button>
+            <button data-testid="block-menu" aria-label="More actions for Limits" aria-haspopup="menu" class="inline-flex size-11 items-center justify-center rounded-md text-muted hover:bg-sunken md:size-9">⋯</button>
+          </div>
+        </li>
+
+        <!-- partial / up-next target -->
+        <li data-testid="today-block" data-status="partial" data-kind="new" aria-label="Alkanes, New, Chemistry, 1 of 2 pomodoros, partial" class="relative flex flex-col gap-3 rounded-md border border-primary bg-surface py-4 pl-5 pr-4 shadow-card ring-1 ring-primary md:flex-row md:items-center">
+          <span class="absolute inset-y-0 left-0 w-1 rounded-l-md" style="background:#10B981" aria-hidden="true"></span>
+          <div class="flex flex-1 flex-col gap-1.5">
+            <p data-testid="block-title" class="text-body font-medium text-text">Alkanes</p>
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span data-testid="block-kind" class="inline-flex h-6 items-center rounded-sm bg-primary-soft px-2 text-caption font-medium text-primary">New</span>
+              <span data-testid="block-subject" class="inline-flex items-center gap-1.5 text-small text-muted"><span class="size-2.5 rounded-full" style="background:#10B981"></span>Chemistry</span>
+              <span class="text-small text-muted">for Organic Chemistry Quiz</span>
+              <span data-testid="block-status" class="inline-flex h-6 items-center rounded-sm bg-warning-soft px-2 text-caption font-medium text-warning">Partial</span>
+              <span class="flex items-center gap-2"><span class="flex gap-1" aria-hidden="true"><span class="size-2.5 rounded-full border-[1.5px] border-accent bg-accent"></span><span class="size-2.5 rounded-full border-[1.5px] border-accent"></span></span><span data-testid="block-progress" class="font-mono text-small tabular-nums text-text">1/2 pomodoros</span></span>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 md:ml-auto">
+            <a href="focus.html" data-testid="block-start" class="inline-flex h-11 items-center gap-1.5 rounded-md border border-border-strong bg-surface px-3 text-small font-medium text-text hover:bg-sunken md:h-9"><span aria-hidden="true">▶</span>Start</a>
+            <button data-testid="block-done" class="inline-flex h-11 items-center rounded-md px-3 text-small font-medium text-primary hover:bg-primary-soft md:h-9">Done</button>
+            <button data-testid="block-partial" class="inline-flex h-11 items-center rounded-md px-3 text-small font-medium text-primary hover:bg-primary-soft md:h-9">Partial</button>
+            <button data-testid="block-skip" class="inline-flex h-11 items-center rounded-md px-3 text-small font-medium text-primary hover:bg-primary-soft md:h-9">Skip</button>
+            <button data-testid="block-menu" aria-label="More actions for Alkanes" aria-haspopup="menu" class="inline-flex size-11 items-center justify-center rounded-md text-muted hover:bg-sunken md:size-9">⋯</button>
+          </div>
+        </li>
+
+        <!-- planned new -->
+        <li data-testid="today-block" data-status="planned" data-kind="new" aria-label="Derivatives, New, Mathematics, 0 of 2 pomodoros, planned" class="relative flex flex-col gap-3 rounded-md border border-border bg-surface py-4 pl-5 pr-4 shadow-card md:flex-row md:items-center">
+          <span class="absolute inset-y-0 left-0 w-1 rounded-l-md" style="background:#6366F1" aria-hidden="true"></span>
+          <div class="flex flex-1 flex-col gap-1.5">
+            <p data-testid="block-title" class="text-body font-medium text-text">Derivatives</p>
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span data-testid="block-kind" class="inline-flex h-6 items-center rounded-sm bg-primary-soft px-2 text-caption font-medium text-primary">New</span>
+              <span data-testid="block-subject" class="inline-flex items-center gap-1.5 text-small text-muted"><span class="size-2.5 rounded-full" style="background:#6366F1"></span>Mathematics</span>
+              <span class="text-small text-muted">for Calculus Midterm</span>
+              <span class="flex items-center gap-2"><span class="flex gap-1" aria-hidden="true"><span class="size-2.5 rounded-full border-[1.5px] border-accent"></span><span class="size-2.5 rounded-full border-[1.5px] border-accent"></span></span><span data-testid="block-progress" class="font-mono text-small tabular-nums text-text">0/2 pomodoros</span></span>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 md:ml-auto">
+            <a href="focus.html" data-testid="block-start" class="inline-flex h-11 items-center gap-1.5 rounded-md border border-border-strong bg-surface px-3 text-small font-medium text-text hover:bg-sunken md:h-9"><span aria-hidden="true">▶</span>Start</a>
+            <button data-testid="block-done" class="inline-flex h-11 items-center rounded-md px-3 text-small font-medium text-primary hover:bg-primary-soft md:h-9">Done</button>
+            <button data-testid="block-partial" class="inline-flex h-11 items-center rounded-md px-3 text-small font-medium text-primary hover:bg-primary-soft md:h-9">Partial</button>
+            <button data-testid="block-skip" class="inline-flex h-11 items-center rounded-md px-3 text-small font-medium text-primary hover:bg-primary-soft md:h-9">Skip</button>
+            <button data-testid="block-menu" aria-label="More actions for Derivatives" aria-haspopup="menu" aria-expanded="true" class="relative inline-flex size-11 items-center justify-center rounded-md bg-sunken text-text md:size-9">⋯</button>
+          </div>
+          <!-- open menu example -->
+          <div role="menu" class="absolute right-4 top-full z-40 mt-1 w-48 rounded-md border border-border bg-surface py-1 shadow-raised">
+            <button role="menuitem" data-testid="block-edit" class="flex h-11 w-full items-center px-3 text-small text-text hover:bg-sunken md:h-9">Edit</button>
+            <button role="menuitem" data-testid="block-move" class="flex h-11 w-full items-center px-3 text-small text-text hover:bg-sunken md:h-9">Move</button>
+            <button role="menuitem" data-testid="block-delete" class="flex h-11 w-full items-center px-3 text-small text-danger hover:bg-danger-soft md:h-9">Delete</button>
+          </div>
+        </li>
+
+        <!-- task -->
+        <li data-testid="today-block" data-status="planned" data-kind="task" aria-label="Problem set 3, Task, Physics, 0 of 1 pomodoro, planned" class="relative mt-28 flex flex-col gap-3 rounded-md border border-border bg-surface py-4 pl-5 pr-4 shadow-card md:mt-24 md:flex-row md:items-center"><!-- wireframe-only margin so the open menu above doesn't cover this row -->
+          <span class="absolute inset-y-0 left-0 w-1 rounded-l-md" style="background:#F59E0B" aria-hidden="true"></span>
+          <div class="flex flex-1 flex-col gap-1.5">
+            <p data-testid="block-title" class="text-body font-medium text-text">Problem set 3</p>
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span data-testid="block-kind" class="inline-flex h-6 items-center rounded-sm border border-border bg-sunken px-2 text-caption font-medium text-text">Task</span>
+              <span data-testid="block-subject" class="inline-flex items-center gap-1.5 text-small text-muted"><span class="size-2.5 rounded-full" style="background:#F59E0B"></span>Physics</span>
+              <span class="flex items-center gap-2"><span class="flex gap-1" aria-hidden="true"><span class="size-2.5 rounded-full border-[1.5px] border-accent"></span></span><span data-testid="block-progress" class="font-mono text-small tabular-nums text-text">0/1 pomodoro</span></span>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 md:ml-auto">
+            <a href="focus.html" data-testid="block-start" class="inline-flex h-11 items-center gap-1.5 rounded-md border border-border-strong bg-surface px-3 text-small font-medium text-text hover:bg-sunken md:h-9"><span aria-hidden="true">▶</span>Start</a>
+            <button data-testid="block-done" class="inline-flex h-11 items-center rounded-md px-3 text-small font-medium text-primary hover:bg-primary-soft md:h-9">Done</button>
+            <button data-testid="block-partial" disabled title="Single-pomodoro blocks can only be Done or Skipped." class="inline-flex h-11 cursor-not-allowed items-center rounded-md px-3 text-small font-medium text-muted md:h-9">Partial</button>
+            <button data-testid="block-skip" class="inline-flex h-11 items-center rounded-md px-3 text-small font-medium text-primary hover:bg-primary-soft md:h-9">Skip</button>
+            <button data-testid="block-menu" aria-label="More actions for Problem set 3" aria-haspopup="menu" class="inline-flex size-11 items-center justify-center rounded-md text-muted hover:bg-sunken md:size-9">⋯</button>
+          </div>
+        </li>
+
+        <!-- skipped -->
+        <li data-testid="today-block" data-status="skipped" data-kind="new" aria-label="Newton's Laws, New, Physics, 0 of 2 pomodoros, skipped" class="relative flex flex-col gap-3 rounded-md border border-dashed border-border-strong bg-transparent py-4 pl-5 pr-4 md:flex-row md:items-center">
+          <span class="absolute inset-y-0 left-0 w-1 rounded-l-md opacity-50" style="background:#F59E0B" aria-hidden="true"></span>
+          <div class="flex flex-1 flex-col gap-1.5">
+            <p data-testid="block-title" class="text-body font-medium text-muted">Newton's Laws</p>
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span data-testid="block-kind" class="inline-flex h-6 items-center rounded-sm bg-primary-soft px-2 text-caption font-medium text-primary">New</span>
+              <span data-testid="block-subject" class="inline-flex items-center gap-1.5 text-small text-muted"><span class="size-2.5 rounded-full" style="background:#F59E0B"></span>Physics</span>
+              <span data-testid="block-status" class="inline-flex h-6 items-center rounded-sm bg-sunken px-2 text-caption font-medium text-muted line-through">Skipped</span>
+              <span data-testid="block-progress" class="font-mono text-small tabular-nums text-muted">0/2 pomodoros</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 md:ml-auto">
+            <button data-testid="block-undo" class="inline-flex h-11 items-center rounded-md px-3 text-small font-medium text-primary hover:bg-primary-soft md:h-9">Undo</button>
+            <button data-testid="block-menu" aria-label="More actions for Newton's Laws" aria-haspopup="menu" class="inline-flex size-11 items-center justify-center rounded-md text-muted hover:bg-sunken md:size-9">⋯</button>
+          </div>
+        </li>
+      </ol>
+    </section>
+  </div>
+</main>
+
+<!-- ============ WIREFRAME REFERENCE: other states ============ -->
+<section class="mx-auto max-w-page px-4 pb-24 md:px-6 xl:px-8">
+  <div class="flex flex-col gap-6 rounded-lg border-2 border-dashed border-border-strong p-4 md:p-6">
+    <p class="text-caption font-semibold uppercase tracking-wider text-muted">Wireframe reference: other states and dialogs (not part of the live page)</p>
+
+    <div class="grid gap-6 xl:grid-cols-2">
+      <!-- Topic check dialog -->
+      <div class="rounded-xl bg-overlay p-4 md:p-8">
+        <div role="dialog" aria-modal="true" aria-labelledby="tc-title" data-testid="topic-check-dialog" class="mx-auto flex w-full max-w-dialog flex-col gap-4 rounded-xl bg-surface p-6 shadow-overlay">
+          <h2 id="tc-title" class="font-display text-title font-semibold text-text">Topic check: Derivatives</h2>
+          <p class="text-body text-muted">Did you cover Derivatives well enough to move on? Your answer shapes the reviews before Calculus Midterm.</p>
+          <div class="flex flex-col gap-2">
+            <p id="conf-l" class="text-small font-medium text-text">How confident are you?</p>
+            <div role="radiogroup" aria-labelledby="conf-l" class="inline-flex w-full rounded-full bg-sunken p-1">
+              <button role="radio" aria-checked="false" data-testid="confidence-1" class="h-9 flex-1 rounded-full px-3 text-small font-medium text-muted">1 · Shaky</button>
+              <button role="radio" aria-checked="false" data-testid="confidence-2" class="h-9 flex-1 rounded-full px-3 text-small font-medium text-muted">2 · Okay</button>
+              <button role="radio" aria-checked="true" data-testid="confidence-3" class="h-9 flex-1 rounded-full bg-surface px-3 text-small font-medium text-text shadow-card">3 · Solid</button>
+            </div>
+            <p class="text-small text-muted">Shaky adds one extra review before the exam.</p>
+          </div>
+          <div class="flex flex-col-reverse gap-2 md:flex-row md:justify-end">
+            <button data-testid="topic-check-not-yet" class="inline-flex h-11 items-center justify-center rounded-md border border-border-strong bg-surface px-4 text-body font-medium text-text hover:bg-sunken">Not yet</button>
+            <button data-testid="topic-check-covered" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-4 text-body font-medium text-on-primary hover:bg-primary-hover">Covered</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add task dialog -->
+      <div class="rounded-xl bg-overlay p-4 md:p-8">
+        <div role="dialog" aria-modal="true" aria-labelledby="at-title" data-testid="add-task-dialog" class="mx-auto flex w-full max-w-dialog flex-col gap-4 rounded-xl bg-surface p-6 shadow-overlay">
+          <h2 id="at-title" class="font-display text-title font-semibold text-text">Add a task</h2>
+          <div class="flex flex-col gap-1.5">
+            <label for="at-t" class="text-small font-medium text-text">Title</label>
+            <input id="at-t" data-testid="add-task-title" aria-invalid="true" aria-describedby="at-t-err" placeholder="e.g. Problem set 4" class="h-11 w-full rounded-md border border-danger bg-surface px-3 text-body text-text placeholder:text-muted">
+            <p id="at-t-err" data-testid="add-task-title-error" class="text-small text-danger">Give the task a title.</p>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1.5"><label for="at-d" class="text-small font-medium text-text">Date</label><input id="at-d" type="date" value="2026-09-20" data-testid="add-task-date" class="h-11 w-full rounded-md border border-border-strong bg-surface px-3 text-body text-text"></div>
+            <div class="flex flex-col gap-1.5"><label for="at-p" class="text-small font-medium text-text">Pomodoros</label><input id="at-p" type="number" min="1" max="8" value="2" data-testid="add-task-pomodoros" class="h-11 w-full rounded-md border border-border-strong bg-surface px-3 text-right font-mono text-body tabular-nums text-text"></div>
+          </div>
+          <div class="flex flex-col gap-1.5"><label for="at-s" class="text-small font-medium text-text">Subject</label><select id="at-s" data-testid="add-task-subject" class="h-11 w-full rounded-md border border-border-strong bg-surface px-3 text-body text-text"><option>No subject</option><option>Mathematics</option><option selected>Physics</option><option>Chemistry</option></select></div>
+          <div class="flex flex-col-reverse gap-2 md:flex-row md:justify-end">
+            <button data-testid="add-task-cancel" class="inline-flex h-11 items-center justify-center rounded-md border border-border-strong bg-surface px-4 text-body font-medium text-text hover:bg-sunken">Cancel</button>
+            <button data-testid="add-task-submit" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-4 text-body font-medium text-on-primary hover:bg-primary-hover">Add task</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      <!-- Empty: all done -->
+      <div data-testid="today-empty" class="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border-strong bg-surface px-6 py-10 text-center md:py-12">
+        <span class="text-stat text-muted" aria-hidden="true">✓</span>
+        <h2 class="font-display text-heading font-semibold text-text md:text-title">All done for today</h2>
+        <p class="max-w-sm text-body text-muted">Every block is finished or skipped. Rest up, or get ahead with a free focus session.</p>
+        <div class="flex flex-col gap-2 md:flex-row">
+          <a href="focus.html" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-4 text-body font-medium text-on-primary hover:bg-primary-hover">Start a free focus</a>
+          <a href="week.html" class="inline-flex h-11 items-center justify-center rounded-md px-4 text-body font-medium text-primary hover:bg-primary-soft">See this week</a>
+        </div>
+      </div>
+      <!-- Empty: no data -->
+      <div data-testid="today-empty" class="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border-strong bg-surface px-6 py-10 text-center md:py-12">
+        <span class="text-stat text-muted" aria-hidden="true">▢</span>
+        <h2 class="font-display text-heading font-semibold text-text md:text-title">Nothing planned yet</h2>
+        <p class="max-w-sm text-body text-muted">Add your subjects, exams and topics, and FocusPlan will build your study plan for you.</p>
+        <div class="flex flex-col gap-2 md:flex-row">
+          <a href="setup.html" data-testid="empty-setup-link" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-4 text-body font-medium text-on-primary hover:bg-primary-hover">Go to Setup</a>
+          <a href="data.html" class="inline-flex h-11 items-center justify-center rounded-md px-4 text-body font-medium text-primary hover:bg-primary-soft">Load the demo semester</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      <!-- Loading -->
+      <div data-testid="today-loading" aria-busy="true" class="flex flex-col gap-3">
+        <span class="sr-only">Loading…</span>
+        <div class="h-3 w-40 animate-pulse rounded-md bg-sunken motion-reduce:animate-none"></div>
+        <div class="h-8 w-32 animate-pulse rounded-md bg-sunken motion-reduce:animate-none"></div>
+        <div class="h-40 animate-pulse rounded-xl bg-sunken motion-reduce:animate-none"></div>
+        <div class="h-20 animate-pulse rounded-md bg-sunken motion-reduce:animate-none"></div>
+        <div class="h-20 animate-pulse rounded-md bg-sunken motion-reduce:animate-none"></div>
+      </div>
+      <div class="flex flex-col gap-4">
+        <!-- Over-capacity banner -->
+        <div data-testid="overcapacity-banner" role="status" class="flex flex-col gap-3 rounded-lg border border-warning/30 bg-warning-soft px-4 py-3">
+          <p class="text-body font-semibold text-text"><span data-testid="overcapacity-total" class="font-mono tabular-nums">14</span> pomodoros don't fit before your exams</p>
+          <ul class="text-small text-text">
+            <li data-testid="overcapacity-item">Organic Chemistry Quiz: 4 unscheduled</li>
+            <li data-testid="overcapacity-item">Calculus Midterm: 6 unscheduled</li>
+            <li data-testid="overcapacity-item">Mechanics Test: 4 unscheduled</li>
+          </ul>
+          <div class="flex flex-col gap-2 md:flex-row md:items-center">
+            <button data-testid="trim-reviews" class="inline-flex h-11 items-center justify-center rounded-md border border-border-strong bg-surface px-3 text-small font-medium text-text hover:bg-sunken md:h-9">Trim reviews</button>
+            <span class="text-small text-muted">Drops the +7 day review</span>
+            <a href="settings.html" data-testid="overcapacity-settings-link" class="inline-flex h-11 items-center justify-center rounded-md px-3 text-small font-medium text-primary hover:bg-primary-soft md:ml-auto md:h-9">Raise daily capacity</a>
+          </div>
+        </div>
+        <!-- Error -->
+        <div data-testid="page-error" role="alert" class="flex flex-col gap-3 rounded-lg border border-danger/40 bg-danger-soft p-5">
+          <p class="text-heading font-semibold text-text">We couldn't read your study data</p>
+          <p class="text-body text-text">Your browser blocked local storage. This can happen in private windows. Reload to try again. Nothing has been changed.</p>
+          <button data-testid="error-reload" class="inline-flex h-11 w-fit items-center rounded-md border border-border-strong bg-surface px-4 text-body font-medium text-text hover:bg-sunken">Reload</button>
+        </div>
+        <!-- Toast -->
+        <div data-testid="toast" role="status" class="flex items-start gap-3 rounded-lg bg-text px-4 py-3 text-small text-bg shadow-raised">
+          <span class="flex-1">Skipped Newton's Laws</span>
+          <button data-testid="toast-undo" class="font-semibold text-primary-soft underline underline-offset-2">Undo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<button onclick="document.documentElement.classList.toggle('dark')" class="fixed bottom-4 left-4 z-60 rounded-full border border-border bg-surface px-3 py-1.5 text-caption text-muted shadow-raised">Wireframe: toggle dark</button>
+</body>
+</html>

@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+/*
+ * FocusPlan design tokens (Tailwind 4 @theme).
+ * Every token becomes a utility: --color-brand -> bg-brand / text-brand / border-brand,
+ * --radius-card -> rounded-card, --shadow-card -> shadow-card, --font-sans -> font-sans.
+ * PLACEHOLDER VALUES: the UI/UX designer's package (.pipeline/design/) replaces these values.
+ * Keep the token NAMES stable; feature phases style with these names only.
+ * Owned by P0. Feature phases must not edit this file; request token changes in the handoff.
+ */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
+
+  /* Surfaces and text */
+  --color-canvas: #f8fafc;        /* page background */
+  --color-surface: #ffffff;       /* cards, nav, dialogs */
+  --color-surface-2: #f1f5f9;     /* subtle fills, hover */
+  --color-line: #e2e8f0;          /* borders, dividers */
+  --color-ink: #0f172a;           /* primary text */
+  --color-ink-muted: #64748b;     /* secondary text */
+
+  /* Brand / actions */
+  --color-brand: #e11d48;         /* primary action, active nav, focus timer */
+  --color-brand-strong: #be123c;  /* primary hover */
+  --color-brand-soft: #ffe4e6;    /* brand tint backgrounds */
+  --color-on-brand: #ffffff;      /* text on brand */
+  --color-ring: #fb7185;          /* focus ring */
+
+  /* Status */
+  --color-success: #16a34a;
+  --color-success-soft: #dcfce7;
+  --color-warning: #d97706;
+  --color-warning-soft: #fef3c7;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fee2e2;
+  --color-info: #2563eb;
+  --color-info-soft: #dbeafe;
+
+  /* Timer phases */
+  --color-phase-focus: #e11d48;
+  --color-phase-short: #0d9488;
+  --color-phase-long: #2563eb;
+
+  /* Shape */
+  --radius-card: 0.75rem;
+  --radius-control: 0.5rem;
+  --shadow-card: 0 1px 2px 0 rgb(15 23 42 / 0.06), 0 1px 3px 0 rgb(15 23 42 / 0.08);
+  --shadow-overlay: 0 20px 25px -5px rgb(15 23 42 / 0.15), 0 8px 10px -6px rgb(15 23 42 / 0.1);
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+    min-height: 100dvh;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+}
